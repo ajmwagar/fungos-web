@@ -1,3 +1,9 @@
+# fungOS mark
+
+`dist/assets/fungos.svg` is an original vector shelf-fungus mark, drawn for
+fungOS. It uses the site's forest, parchment and moss palette and is shared
+by the navigation and favicon. No third-party logo or generated raster asset.
+
 # Platform marks
 
 The platform SVGs in `dist/assets/` are sourced from Simple Icons (CC0-1.0):
