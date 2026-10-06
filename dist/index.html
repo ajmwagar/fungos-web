@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#283d31">
+  <meta name="description" content="fungOS is Linux built around Mycelium discovery, network topology, secure enrollment and signed software updates.">
+  <title>fungOS — Linux for connected machines</title>
+  <link rel="icon" type="image/svg+xml" href="assets/fungos.svg">
+  <link rel="stylesheet" href="distro.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="masthead">
+    <nav class="wrap" aria-label="Primary navigation">
+      <a class="brand" href="#top"><img class="brand-mark" src="assets/fungos.svg" width="32" height="32" alt="" aria-hidden="true">fungOS</a>
+      <div class="navlinks">
+        <a href="#downloads">Downloads</a>
+        <a href="#docs">Documentation</a>
+        <a href="#profiles">Hardware</a>
+        <a href="https://github.com/ajmwagar/mycelium">Source</a>
+      </div>
+    </nav>
+  </header>
+  <div class="wrap page-layout" id="top">
+    <aside class="resources" aria-label="Project resources">
+      <h2>fungOS</h2>
+      <ul>
+        <li><a href="#content">Overview</a></li>
+        <li><a href="#core">Mycelium</a></li>
+        <li><a href="#profiles">System profiles</a></li>
+        <li><a href="#downloads">Build status</a></li>
+        <li><a href="#proof">Screenshot</a></li>
+        <li><a href="#principles">Project</a></li>
+      </ul>
+      <h2>Documentation</h2>
+      <ul>
+        <li><a href="docs/base.html">Build &amp; inspect</a></li>
+        <li><a href="docs/pi.html">Raspberry Pi</a></li>
+        <li><a href="docs/updates.html">Updates &amp; recovery</a></li>
+        <li><a href="docs/profiles.html">Profiles</a></li>
+      </ul>
+      <p class="sidebar-note">Future Present Labs<br>Technical preview</p>
+    </aside>
+    <main id="content">
+      <section class="intro">
+        <h1>Linux for connected machines.</h1>
+        <p>fungOS brings Mycelium’s discovery, network topology, secure enrollment and software updates into a small Linux system.</p>
+        <p>Boot a machine, join your fleet, and see what’s connected.</p>
+        <div class="actions">
+          <a class="button primary" href="#downloads">Build status</a>
+          <a class="button" href="#docs">Read the documentation</a>
+        </div>
+        <p class="preview-note"><strong>Preview:</strong> amd64 and arm64 root filesystems are built. QEMU boot and signed application updates are verified. Public images are not available yet.</p>
+      </section>
+
+      <section id="core">
+        <h2>Discover. Map. Enroll. Update.</h2>
+        <dl class="capabilities">
+          <dt>Discovery</dt><dd>Find machines, services, network equipment and attached resources.</dd>
+          <dt>Topology</dt><dd>See sites, subnets, links and how devices connect.</dd>
+          <dt>Enrollment</dt><dd>Provisioned machines join on first boot using short-lived Mycelium claims.</dd>
+          <dt>Access</dt><dd>Manage peer identity, roles and SSH access.</dd>
+          <dt>Updates</dt><dd>Distribute signed software, check activation health and recover from failed updates.</dd>
+        </dl>
+        <p><a href="https://github.com/ajmwagar/mycelium">Mycelium</a> also runs independently on existing machines. You don’t need to reinstall a device to bring it into your fleet.</p>
+      </section>
+
+      <section id="profiles">
+        <h2>System profiles</h2>
+        <p>A shared Debian base, with applications selected for the job.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="System profile status">
+          <table>
+            <thead><tr><th scope="col">Profile</th><th scope="col">Includes</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Base</th><td>Linux, SSH and Mycelium integration</td><td>Rootfs built and inspected</td></tr>
+              <tr><th scope="row">Edge</th><td>Unibus and Canvas / Wayland</td><td>Running in QEMU</td></tr>
+              <tr><th scope="row">Headless edge</th><td>Unibus runtime, no display session</td><td>Pi 3B+ image inspected</td></tr>
+              <tr><th scope="row">Compute</th><td>UMIE, Yggdrasil or Shroud</td><td>GPU handoff verified</td></tr>
+              <tr><th scope="row">Cloud</th><td>Shroud workload runtime</td><td>Nested Firecracker boot verified</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Rootfs targets: <strong>amd64 and arm64</strong>. Raspberry Pi 3B+ hardware boot is pending. A DigitalOcean image is not available yet.</p>
+        <p><strong>Beyond the desktop.</strong> The fungOS Fire TV app displays Unibus / Canvas. Holodeck brings the interface into VR on Quest 2 and Quest 3.</p>
+        <ul class="platforms" aria-label="Display platforms">
+          <li><img src="assets/amazonfiretv.svg" width="22" height="22" alt="" aria-hidden="true">Fire TV</li>
+          <li><img src="assets/meta.svg" width="22" height="22" alt="" aria-hidden="true">Quest 2 / 3</li>
+          <li><img src="assets/appletv.svg" width="22" height="22" alt="" aria-hidden="true">Apple TV <span>planned</span></li>
+          <li><img src="assets/htcvive.svg" width="22" height="22" alt="" aria-hidden="true">Vive Pro <span>planned</span></li>
+        </ul>
+      </section>
+
+      <section id="docs">
+        <h2>Documentation</h2>
+        <ul class="doc-links">
+          <li><a href="docs/base.html">Build and inspect a root filesystem</a></li>
+          <li><a href="docs/pi.html">Flash a Pi, connect over SSH and enroll</a></li>
+          <li><a href="docs/updates.html">Configure updates, health checks and recovery</a></li>
+          <li><a href="docs/profiles.html">Choose a system profile</a></li>
+          <li><a href="docs/ecosystem.html">Components and integration</a></li>
+        </ul>
+      </section>
+
+      <section id="downloads">
+        <h2>Downloads</h2>
+        <p><strong>No public image release yet.</strong> Current builds are listed below; these are not download links.</p>
+        <ul class="builds">
+          <li><strong>Pi 3B+ · arm64 · headless edge</strong><br>Owner-personalized image. Filesystem checks passed; hardware boot pending.</li>
+          <li><strong>Base / edge · amd64 and arm64</strong><br>Rootfs tarballs built and inspected. Not standalone boot images.</li>
+          <li><strong>Cloud · amd64</strong><br>Rootfs verified with nested Firecracker in QEMU. Not a provider image.</li>
+        </ul>
+        <p class="secondary">Hardware validation, a security refresh and unpersonalized release images are still required before public downloads.</p>
+        <details><summary>Recorded build checksums</summary>
+          <p>Pi 3B+ image:<br><code>7de69417da720730fd2dc094486ebaea1f4f5622dc10074854e7a85ebba1cb71</code></p>
+          <p>Cloud rootfs:<br><code>2f5abd39627033adf3c1c98947f3f0892f8338ea424f5350d697d7cb601f9975</code></p>
+          <p>Base and edge checksums remain build-local.</p>
+        </details>
+      </section>
+
+      <section id="proof">
+        <h2>Running fungOS</h2>
+        <figure class="capture">
+          <a href="assets/fungos-workspace.png"><img src="assets/fungos-workspace.png" width="1280" height="800" loading="lazy" alt="Two real Wayland terminal windows arranged by Canvas over the frozen Undergrowth background in the fungOS QEMU guest"></a>
+          <figcaption>Canvas / Wayland in QEMU, 6 October 2026.</figcaption>
+        </figure>
+        <div class="capture-grid">
+          <figure class="capture">
+            <a href="assets/fungos-desktop.png"><img src="assets/fungos-desktop.png" width="1280" height="800" loading="lazy" alt="The actual fungOS QEMU desktop showing its static fungal background and native cursor"></a>
+            <figcaption>Desktop.</figcaption>
+          </figure>
+          <figure class="capture">
+            <a href="assets/fungos-terminal.png"><img src="assets/fungos-terminal.png" width="1280" height="800" loading="lazy" alt="A real native Wayland terminal showing the running fungOS display services"></a>
+            <figcaption>Terminal.</figcaption>
+          </figure>
+        </div>
+        <p>Mycelium, Unibus and Canvas returned after reboot. Signed application activation and rollback were verified.</p>
+        <p class="secondary">The compositor remains manually updated until its display health check is ready.</p>
+      </section>
+
+      <section id="principles">
+        <h2>About the project</h2>
+        <p>fungOS is developed by Future Present Labs for homelabs, on-premises fleets, studios and compute nodes.</p>
+        <p>Mycelium manages machines. Unibus provides discovery and transport multiplexing across applications, devices and media. Canvas provides the interface. Shroud runs workloads. Each stands on its own.</p>
+        <ul class="values">
+          <li><strong>Open source</strong> — first-party foundations target MIT / Apache-2.0.</li>
+          <li><strong>Right to repair</strong> — modular drivers for mixed hardware.</li>
+          <li><strong>Privacy</strong> — local operation and least-privilege access.</li>
+          <li><strong>Interoperability</strong> — existing tools and native transports.</li>
+        </ul>
+        <p class="secondary">Upstream packages keep their own licenses. Standard and opt-in AGPL application selections are planned.</p>
+        <p><a href="https://github.com/ajmwagar/mycelium">Mycelium source</a> · <a href="https://github.com/FuturePresentLabs">Future Present Labs</a></p>
+      </section>
+      <section id="trust">
+        <h2>Security</h2>
+        <p>Discovery does not grant access. People and machines have separate identities; roles control permitted actions. Images do not clone peer credentials.</p>
+        <p class="secondary">No current image is certified for regulated or classified use. <a href="docs/profiles.html">Security profiles and current limits</a>.</p>
+      </section>
+    </main>
+  </div>
+  <footer class="wrap"><p>fungOS · Future Present Labs · <a href="#top">Back to top</a></p></footer>
+</body>
+</html>

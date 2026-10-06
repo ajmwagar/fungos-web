@@ -1,0 +1,5 @@
+# Fab registration must select this file with netlify_config = "netlify.toml".
+# The site is dependency-free static HTML; do not run npm install/build.
+[build]
+publish = "dist"
+command = "test -s dist/index.html && test -s dist/distro.css && test -s dist/docs/base.html && test -s dist/docs/updates.html && test -s dist/assets/fungos.svg"
