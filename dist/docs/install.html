@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#283d31">
+  <meta name="description" content="Build, enroll and verify a fungOS QEMU guest. Installation paths, signed updates and recovery.">
+  <title>Install and first boot — fungOS</title>
+  <link rel="stylesheet" href="../distro.css">
+  <link rel="icon" type="image/svg+xml" href="../assets/fungos.svg">
+</head>
+<body class="manual-page">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header>
+    <nav class="wrap" aria-label="Documentation navigation">
+      <a class="brand" href="../index.html"><img class="brand-mark" src="../assets/fungos.svg" width="32" height="32" alt="" aria-hidden="true">fungOS</a>
+      <a href="../index.html#docs">Documentation</a>
+      <a href="../index.html#downloads">Release status</a>
+    </nav>
+  </header>
+  <main class="wrap manual" id="content">
+    <p class="eyebrow">Technical preview</p>
+    <h1>Install and first boot</h1>
+    <p>Start with an isolated QEMU guest on a Linux KVM host. The edge runtime, peer enrollment, native Wayland services and signed updates have been verified there.</p>
+    <p><strong>No public installer image yet.</strong> A root filesystem tarball is not a bootable disk or installer ISO. Do not flash it onto a physical machine.</p>
+
+    <h2>Choose a target</h2>
+    <ul>
+      <li><strong>Existing Linux or macOS machine:</strong> install <a href="https://github.com/ajmwagar/mycelium#readme">Mycelium</a>. This joins an existing OS; it does not install fungOS.</li>
+      <li><strong>QEMU/KVM:</strong> build a runtime profile, assemble a new persistent root disk, then enroll it on first boot.</li>
+      <li><strong>Raspberry Pi:</strong> follow the <a href="pi.html">board-specific instructions</a>. An arm64 runtime still needs Pi firmware, kernel and modules. Hardware qualification is pending.</li>
+      <li><strong>Bare-metal PXE:</strong> Genesis coordinates boot. Enrollment additionally needs a trusted claim-delivery path; ordinary PXE does not authorize a machine.</li>
+    </ul>
+
+    <h2>First QEMU boot</h2>
+    <ol>
+      <li>Choose <a href="profiles.html">base, edge or headless edge</a>. <a href="base.html">Build and inspect</a> the runtime on the Linux host. Edge includes Canvas runtime dependencies; application executables arrive separately as signed packages.</li>
+      <li>Assemble the QEMU overlay with a compatible static Mycelium bootstrap, matching kernel and public recovery SSH key. Create a new persistent root disk. Never clone another peer’s credentials.</li>
+      <li>Issue a short-lived, one-use peer claim from your authority. Supply the expected name, site and certified reachable seed addresses. Attach its private claim disk read-only; keep authority private keys off the guest.</li>
+      <li>Boot and verify enrollment separately from Linux startup. Detach and delete the consumed claim media and plaintext log. Retain the persistent root disk.</li>
+      <li>Install the <a href="updates.html">local service bindings and package policy</a>. Select the stable peer ID, not a hostname. Configure fresh application credentials, wait for verified artifact downloads, then explicitly activate first installations.</li>
+      <li>Configure signed updates, verify native health and restart without the claim disk. The first signed Mycelium bootstrap activation is explicit; subsequent automatic updates respect age, rollout and retry gates.</li>
+    </ol>
+    <p class="secondary">The QEMU display fixture is a root-owned development session, not a production seat configuration. Canvas Linux owns Wayland/KMS. Compositor automatic updates remain gated on renderer/output health.</p>
+
+    <h2>Verify the guest</h2>
+    <pre class="manual-source"><code>mycelium node status --json
+mycelium software reconcile --dry-run --json
+mycelium update policy status --json
+systemctl is-active mycelium mycelium-update.timer
+# Display edge only:
+systemctl is-active unibus-router canvas-compositor canvas canvas-edge</code></pre>
+    <p>Compare the peer-key, enrollment-certificate, machine-ID and SSH-host-public-key hashes before and after reboot. Inspect the actual framebuffer or receiver as well: healthy units alone do not prove a visible desktop.</p>
+
+    <h2>Recovery</h2>
+    <ul>
+      <li><strong>Daemon unavailable:</strong> inspect <code>systemctl status mycelium</code> and <code>journalctl -u mycelium</code>. Recover through systemd; the enrolled fungOS wrapper does not implicitly start a competing daemon.</li>
+      <li><strong>Artifact missing:</strong> check placement, signer, target architecture and a reachable peer holding verified bytes. A known peer may run an older package protocol.</li>
+      <li><strong>TLS mismatch:</strong> the certificate must cover the configured address. An SSH tunnel does not change that requirement. Do not bypass verification.</li>
+      <li><strong>Display runtime incomplete:</strong> rebuild the tracked edge profile. Image construction rejects missing configured cursor assets.</li>
+      <li><strong>Update waiting or failed:</strong> inspect staging, policy, the service journal and activation record. Keep the rollout gates. Do not give APT and native activation ownership of the same component.</li>
+    </ul>
+    <p>Retain a public-key SSH recovery route and the previous artifact. Do not re-enroll a healthy identity to fix service or network drift.</p>
+    <p class="secondary">Source reference: <code>fungOS/INSTALL.md</code>, Mycelium revision <code>050a48a853a4b0fe45cc7307df8af4af1f7d510d</code>. Technical preview; physical installer and hardware qualification remain pending.</p>
+  </main>
+</body>
+</html>

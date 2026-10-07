@@ -35,6 +35,7 @@
       </ul>
       <h2>Documentation</h2>
       <ul>
+        <li><a href="docs/install.html">Install &amp; first boot</a></li>
         <li><a href="docs/base.html">Build &amp; inspect</a></li>
         <li><a href="docs/pi.html">Raspberry Pi</a></li>
         <li><a href="docs/updates.html">Updates &amp; recovery</a></li>
@@ -51,7 +52,7 @@
           <a class="button primary" href="#downloads">Build status</a>
           <a class="button" href="#docs">Read the documentation</a>
         </div>
-        <p class="preview-note"><strong>Preview:</strong> amd64 and arm64 root filesystems are built. QEMU boot and signed application updates are verified. Public images are not available yet.</p>
+        <p class="preview-note"><strong>Preview:</strong> amd64 and arm64 root filesystems are built. QEMU enrollment, reboot persistence and signed updates are verified. Public images are not available yet.</p>
       </section>
 
       <section id="core">
@@ -94,6 +95,7 @@
       <section id="docs">
         <h2>Documentation</h2>
         <ul class="doc-links">
+          <li><a href="docs/install.html">Install, enroll and verify the first boot</a></li>
           <li><a href="docs/base.html">Build and inspect a root filesystem</a></li>
           <li><a href="docs/pi.html">Flash a Pi, connect over SSH and enroll</a></li>
           <li><a href="docs/updates.html">Configure updates, health checks and recovery</a></li>
@@ -105,6 +107,7 @@
       <section id="downloads">
         <h2>Downloads</h2>
         <p><strong>No public image release yet.</strong> Current builds are listed below; these are not download links.</p>
+        <p>Start with the <a href="docs/install.html">QEMU installation guide</a>, or add Mycelium to an existing machine without reinstalling it.</p>
         <ul class="builds">
           <li><strong>Pi 3B+ · arm64 · headless edge</strong><br>Owner-personalized image. Filesystem checks passed; hardware boot pending.</li>
           <li><strong>Base / edge · amd64 and arm64</strong><br>Rootfs tarballs built and inspected. Not standalone boot images.</li>
@@ -134,7 +137,7 @@
             <figcaption>Terminal.</figcaption>
           </figure>
         </div>
-        <p>Mycelium, Unibus and Canvas returned after reboot. Signed application activation and rollback were verified.</p>
+        <p>A rebuilt edge image enrolled, downloaded Unibus and Canvas through peers, and retained its identity and healthy services after reboot. Signed updates and rollback are separately verified.</p>
         <p class="secondary">The compositor remains manually updated until its display health check is ready.</p>
       </section>
 
