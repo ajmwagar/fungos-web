@@ -6,6 +6,15 @@ by the navigation and favicon. No third-party logo or generated raster asset.
 
 # Platform marks
 
+## fungOS mark
+
+`dist/assets/fungos.svg` and `fungos-icon.png` are original procedural artwork,
+rendered from Mycelium's `fungOS/edge/theme/render-undergrowth.rs`. They share the
+Undergrowth wallpaper's organic contour field. Code and artwork are MIT OR
+Apache-2.0; no third-party shader was used. The fungOS name and logo are project
+marks, not a claim of registered status. Software licenses do not grant trademark
+rights; see the distribution repository's `TRADEMARKS.md`.
+
 The platform SVGs in `dist/assets/` are sourced from Simple Icons (CC0-1.0):
 
 - `amazonfiretv.svg`: https://github.com/simple-icons/simple-icons/blob/13.0.0/icons/amazonfiretv.svg
