@@ -9,7 +9,7 @@ by the navigation and favicon. No third-party logo or generated raster asset.
 ## fungOS mark
 
 `dist/assets/fungos.svg` and `fungos-icon.png` are original procedural artwork,
-rendered from Mycelium's `fungOS/edge/theme/render-undergrowth.rs`. They share the
+rendered from fungOS' `brand/render-undergrowth.rs`. They share the
 Undergrowth wallpaper's organic contour field. Code and artwork are MIT OR
 Apache-2.0; no third-party shader was used. The fungOS name and logo are project
 marks, not a claim of registered status. Software licenses do not grant trademark
