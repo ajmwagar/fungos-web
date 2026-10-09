@@ -1,5 +1,5 @@
 /* Shared layout and project switcher: generated from fpl-project-theme. */
-@import url("theme/theme.css?v=19186352e2fc2dcf02042cf407a41694b984ee83");
+@import url("theme/theme.css?v=02743b6991c747478dc76cafed61c8c771a19d92");
 /* fungOS-specific platform and document content. */
 .platforms { display:flex; flex-wrap:wrap; gap:12px 22px; list-style:none; padding:0; font-size:14px; }
 .platforms li { display:inline-flex; align-items:center; gap:7px; }
