@@ -1,12 +1,12 @@
 ---
-title: Raspberry Pi support and qualification
+title: Raspberry Pi setup and support
 source_commit: 6bb83c9bb3b650483e0dbcb9c6a14b37906671b9
 watches:
   - README.md
   - base/scripts/build.sh
   - base/profiles
 ---
-# Raspberry Pi support and qualification
+# Raspberry Pi setup and support
 
 The public fungOS builder supports an `arm64` Debian rootfs. **That is not a ready-to-flash Raspberry Pi image.** Board firmware, kernel, modules, boot partition, disk assembly and hardware qualification are separate steps.
 
@@ -34,7 +34,7 @@ Use `edge` only when you also intend to supply and qualify the board's display s
 6. If using audio or display, inspect the real peripheral output, not just unit status.
 7. Record the precise board, boot inputs, application versions and failed cases before calling it qualified.
 
-This is a qualification checklist, not an executable flashing script. Do not write the rootfs tarball directly to an SD card or overwrite an existing device to test it.
+Use this checklist when assembling a boot image. The rootfs tarball cannot be flashed directly to an SD card. Test with a spare card to preserve your existing installation.
 
 ## Boundaries
 

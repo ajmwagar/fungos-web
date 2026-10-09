@@ -29,7 +29,7 @@ sudo ./base/scripts/build.sh amd64 edge
 sudo ./base/scripts/inspect.sh base/out/fungos-edge-amd64.tar
 ```
 
-Inspect the resolved package list and manifest before provisioning. The current source-of-truth files are `base/profiles/*.capabilities` and `base/capabilities/*.packages`. A derived website table is a reviewed explanation of those files, not a second installer.
+Inspect the resolved package list and manifest before provisioning. Package selections are defined in `base/profiles/*.capabilities` and `base/capabilities/*.packages`.
 
 ## Runtime dependencies versus applications
 
@@ -45,7 +45,7 @@ Keep one activation owner per executable. APT and native package activation must
 - A role or signed placement policy is separate from the machine's hardware capabilities.
 - Generated distributions contain separately licensed software; the complete image is not uniformly MIT/Apache.
 
-## Current qualification
+## Tested configurations
 
 The public owner documents persistent amd64 QEMU edge operation and isolated visual rollback. The generic builder itself is not an installer. Pi, cloud disk assembly, encrypted-root unlock, whole-set atomic updates and accelerator-specific model qualification have independent evidence requirements.
 

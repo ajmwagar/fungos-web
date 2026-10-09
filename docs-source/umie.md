@@ -19,7 +19,7 @@ watches:
 
 # UMIE: one resident model, modular behavior
 
-UMIE—the Universal Modular Inference Engine—is a Rust inference substrate for the fungOS ecosystem. A base model stays resident; validated behavior assets change its operation. Model-specific Lua recipes resolve into typed plans. Rust owns checkpoint bytes, memory, kernels, scheduling and execution.
+UMIE—the Universal Modular Inference Engine—is a Rust inference engine for the fungOS ecosystem. A base model stays in memory while validated behavior assets change its operation. Lua recipes describe each model; Rust loads checkpoints, manages memory and runs inference.
 
 UMIE has native Metal and CUDA paths, a Rust SDK, C ABI and serving interfaces. Model coverage is a set of explicit operations and encodings, rather than a blanket promise that every model in a family works. The engine is in active development. Model weights and their upstream licenses are separate from UMIE's Apache-2.0 software license.
 
@@ -27,18 +27,18 @@ UMIE has native Metal and CUDA paths, a Rust SDK, C ABI and serving interfaces. 
 
 A recipe names a model and maps its tensors. A schema check validates that plan. Checkpoint admission then checks actual tensor names, dtypes and derived shapes. A backend must implement the required operators and encodings. Finally, real checkpoint execution and semantic parity need their own evidence.
 
-This page separates those levels. Historical benchmark records are reported as operations performed at their recorded revisions. The documentation work did not rerun GPU models, establish current quality, or certify every configuration. A missing record means unknown. A recipe or timing result alone is insufficient evidence of reliable generation.
+The tables distinguish recipe validation from checkpoint execution. Benchmark results apply to the recorded model, encoding, backend and code revision. Configurations without execution records remain unverified.
 
 ## Model families and execution evidence
 
 | Models | Architecture / purpose | Evidence in source | Limits |
 |---|---|---|---|
-| Qwen2.5 1.5B Instruct | Dense causal decoder; text and constrained decisions | Recorded Metal BF16/Q8 and CUDA BF16/Q4/Q8 greedy generation; native RLCD records on both backends | Results are historical and encoding specific; not evidence for every Qwen2.5 size |
+| Qwen2.5 1.5B Instruct | Dense causal decoder; text and constrained decisions | Recorded Metal BF16/Q8 and CUDA BF16/Q4/Q8 greedy generation; native RLCD records on both backends | Tested configurations are listed; other Qwen2.5 sizes require separate validation |
 | Llama 3.2 1B Instruct | Standard dense causal attention | Checked-in model recipe and contract fixtures | Inventory establishes schema validation, not checkpoint generation parity |
 | Granite 4.1 8B | Standard attention with model-specific scaling | Recorded CUDA Q4/Q8 generation; Metal/CUDA primitive records | Primitive execution is narrower than whole-model generation |
 | Qwen3 8B / 30B-A3B; Qwen3.5 0.8B / 4B | Dense, MoE and hybrid-attention recipes | Typed recipe resolution | Consult operators and materialization admission before execution; family recognition is not full coverage |
 | Ornith 1.5 9B / 35B-A3B | Hybrid decoder recipes | Historical CUDA greedy generation records, including native NVFP4 on the 35B recipe | Older README WIP notes describe earlier scope; prefer operation records at explicit revisions |
-| Swift-Qwen3.8 27B; Qwen3.8-Flash-Next | Hybrid decoder recipes | Historical CUDA greedy generation records, with NVFP4 paths | Backend-, revision- and encoding-specific; no current hardware rerun in this pass |
+| Swift-Qwen3.8 27B; Qwen3.8-Flash-Next | Hybrid decoder recipes | Historical CUDA greedy generation records, with NVFP4 paths | Results apply to the recorded backend, revision and encoding |
 | GPC-1; Granite 3.0 1B-A400M; Nemotron 3 Nano 30B-A3B | Additional decoder targets | Model recipes, typed family validation and subsystem source | Recipe presence does not establish generation parity |
 | Qwen3-VL 8B text | Text decoder extraction | Explicit text-only recipe | Does not imply image input or full vision-language execution |
 | Qwen2.5 3B/7B/14B/32B; Coder 7B/14B/32B; Qwen3 4B/14B/32B; Granite 3.1 2B/8B | Incubator recipes | Pinned upstream metadata and fixture/schema tests | Catalog explicitly declares non-production, schema-validated/unverified; no loading or generation claim |
@@ -50,14 +50,14 @@ Recorded greedy generation operations are separated from embeddings, RMSNorm, Ro
 | Model / subsystem | Implemented boundary | Evidence and scope |
 |---|---|---|
 | Mel-band Roformer Deux; BS-Roformer SW 6-stem | Typed separation recipes, separation and streaming modules | Existing stream parity and transport tests; resident Metal test is hardware dependent. Schema checks alone do not establish output quality |
-| ACE-Step 1.5 standard-turbo | Audio-generation recipe and `umie-acestep` backend ABI | Typed geometry/assets/admission and execution module; no end-to-end quality or hardware claim from this documentation pass |
+| ACE-Step 1.5 standard-turbo | Audio-generation recipe and `umie-acestep` backend ABI | Asset validation and execution module implemented; end-to-end audio quality and hardware validation pending |
 | VoxCPM2 behavior assets | Speech-generation plan, voice behavior as a loadable asset, `umie-voxcpm` execution boundary | Base and behavior identities are distinct; custom voice recipes are not a claim about arbitrary voice packages |
-| Nemotron 3.5 ASR streaming | Native FastConformer/RNN-T frontend, encoder and transducer runtime in `umie-asr` | Source declares spike scope. This is not a Lua catalog entry and has not been hardware verified in this pass |
+| Nemotron 3.5 ASR streaming | Native FastConformer/RNN-T frontend, encoder and transducer runtime in `umie-asr` | Experimental implementation outside the Lua catalog; hardware validation pending |
 | Discogs-EffNet | Audio embeddings compatible with Essentia's Discogs-EffNet pipeline in `umie-embedding` | Pinned assets and frontend identifiers; audio embeddings are distinct from text sentence embeddings |
 | Taiga S1 | Typed-option policy assembled from generic encoder operations | Recipe requires admitted checkpoint configuration and shape facts; default model-catalog resolution cannot supply those facts |
 | SAM Audio small TV | Prompt-aware audio separation recipe | Recipe/plan boundary exists; Roformer geometry or coverage should not be inferred for SAM Audio |
 
-Audio and ASR have their own input, frontend, output-rate and checkpoint contracts. They do not become interchangeable merely because UMIE serves them. Image diffusion-transformer work is a separate execution target; this matrix does not invent image model coverage absent a reviewed recipe and execution record.
+Audio and speech-recognition models require their own input formats, preprocessing, output rates and checkpoints. Image diffusion models are a separate development effort and are not covered by this matrix.
 
 ## Behavior and data boundaries
 
@@ -79,7 +79,7 @@ GET /v1/models
 GET /metrics
 ```
 
-A running process is not evidence that the selected model has finished loading. Verify readiness and the operation actually required by the client. The repository's [Rust HTTP SDK reference](https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk-rust-http.md) covers the HTTP client boundary. These repository links may require access.
+Wait for model readiness, then test the operation your client needs. The [Rust HTTP SDK reference](https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk-rust-http.md) documents the client interface. Repository access may be required.
 
 ## Regenerate the inventory
 
