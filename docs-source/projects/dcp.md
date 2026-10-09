@@ -10,7 +10,7 @@ watches:
 
 DCP publishes the finite decisions a system can legally make against its current state. A client selects an advertised action and schema-valid arguments; the provider validates authority and current revisions before applying an effect.
 
-**Version 0.1 is a draft.** This ecosystem guide is explanatory, not normative. The [DCP reference site](https://dcp.fpl.dev/) owns the protocol and its normative specification. Reviewed source: `spec/v0.1/README.md` and the JSON Schema 2020-12 contracts at the revision above.
+**Version 0.1 is a draft.** This ecosystem guide is explanatory, not normative. The [DCP reference site](https://dcp.fpl.dev/) and [normative specification](https://github.com/FuturePresentLabs/dcp/blob/main/spec/v0.1/README.md) own the protocol. Reviewed source: `spec/v0.1/README.md` and the JSON Schema 2020-12 contracts at the revision above.
 
 ## Why catalogs are state-derived
 
