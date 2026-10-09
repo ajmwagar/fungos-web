@@ -38,3 +38,9 @@ artwork rendered from `fungOS/edge/theme/render-undergrowth.rs` in Mycelium;
 no third-party Shadertoy source was copied. Cursor assets are distribution-owned
 `xcursor-themes`; their attribution remains in the guest's
 `/usr/share/doc/xcursor-themes/copyright`.
+
+# Shared project theme
+
+`dist/theme/` is generated from `ajmwagar/fpl-project-theme` at the revision
+recorded in `REVISION`. Theme CSS is AGPL-3.0-or-later; full terms ship in
+`dist/theme/LICENSE`. Logo provenance is in `dist/theme/ASSET-NOTICES.md`.

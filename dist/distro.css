@@ -1,98 +1,12 @@
-/* Shared site and documentation styles. One UI type family; monospace for source. */
-:root {
-  --bg: #c9cdca;
-  --panel: #e5e8e2;
-  --ink: #202d26;
-  --muted: #46554b;
-  --line: #a0aaa0;
-  --link: #28543b;
-  --forest: #283d31;
-  --max: 1080px;
-}
-* { box-sizing: border-box; }
-html { scroll-padding-top: 1rem; }
-body { margin: 0; color: var(--ink); background: var(--bg); font: 1rem/1.55 Arial, Helvetica, sans-serif; }
-a { color: var(--link); text-underline-offset: .15em; }
-a:hover { color: #173923; }
-a:focus-visible, summary:focus-visible, .table-scroll:focus-visible { outline: 3px solid #714b21; outline-offset: 3px; }
-.wrap { width: min(var(--max), calc(100% - 2rem)); margin-inline: auto; }
-h1, h2, h3 { font-family: inherit; line-height: 1.25; letter-spacing: normal; }
-h1 { margin: 0 0 1rem; font-size: 2rem; }
-h2 { margin: 0 0 .8rem; font-size: 1.4rem; }
-p { margin: 0 0 1rem; }
-code, pre { font-family: ui-monospace, "DejaVu Sans Mono", monospace; }
-code { font-size: .875em; overflow-wrap: anywhere; }
-.skip-link { position: absolute; top: -5rem; left: 1rem; z-index: 5; background: var(--panel); padding: .5rem; }
-.skip-link:focus { top: .5rem; }
-.masthead, .manual-page > header { background: var(--forest); border-bottom: 4px solid #7e9273; color: #e5eadd; }
-nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 4.5rem; padding-block: .8rem; flex-wrap: wrap; }
-nav a { color: #e5eadd; }
-nav a:hover { color: white; }
-.brand { display: inline-flex; align-items: center; gap: .5rem; font-size: 1.75rem; font-weight: 700; text-decoration: none; }
-.brand-mark { width: 2rem; height: 2rem; flex: none; }
-.navlinks { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: .9375rem; }
-.page-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 1.8rem; margin-top: 1.5rem; align-items: start; }
-.resources { font-size: .9375rem; padding: .5rem 0; }
-.resources h2 { font-size: 1rem; margin-bottom: .5rem; }
-.resources ul { list-style: none; padding: 0; margin: 0 0 1.5rem; }
-.resources li { margin-block: .35rem; }
-.sidebar-note, .secondary { color: var(--muted); font-size: .875rem; }
-main { min-width: 0; background: var(--panel); border: 1px solid var(--line); padding: 1.6rem 1.8rem; }
-section { padding-block: 1.4rem; border-top: 1px solid var(--line); }
-section:first-child { padding-top: 0; border-top: 0; }
-section:last-child { padding-bottom: 0; }
-.intro > p { max-width: 46rem; }
-.actions { display: flex; gap: .65rem; flex-wrap: wrap; margin: 1.2rem 0; }
-.button { display: inline-block; border: 1px solid #6b7e6d; padding: .5rem .8rem; font-size: .9375rem; text-decoration: none; font-weight: 700; }
-.button.primary { background: #355a3d; color: #f1f3eb; }
-.button:hover { background: #d4ddd0; }
-.button.primary:hover { background: #284a31; color: white; }
-.preview-note { font-size: .875rem; color: var(--muted); border-left: 3px solid #73836a; padding-left: .8rem; }
-.capabilities { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: .6rem 1rem; margin: 0 0 1rem; }
-.capabilities dt { font-weight: 700; }
-.capabilities dd { margin: 0; }
-.table-scroll { overflow-x: auto; margin-bottom: 1rem; }
-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
-th, td { text-align: left; vertical-align: top; padding: .65rem .55rem; border-bottom: 1px solid var(--line); }
-thead th { background: #d3dace; }
-tbody th { width: 22%; }
-.doc-links { padding-left: 1.2rem; margin: 0; }
-.doc-links li { padding-block: .25rem; }
-.builds, .values { padding-left: 1.2rem; }
-.builds li { margin-bottom: .8rem; }
-.platforms { display: flex; flex-wrap: wrap; gap: .7rem 1.4rem; list-style: none; padding: 0; margin: 0; font-size: .875rem; }
-.platforms li { display: inline-flex; align-items: center; gap: .45rem; }
-.platforms img { width: 1.375rem; height: 1.375rem; opacity: .65; flex: none; }
-.platforms span { color: var(--muted); }
-details { font-size: .875rem; border-top: 1px solid var(--line); padding-top: .7rem; }
-summary { cursor: pointer; color: var(--link); margin-bottom: .6rem; }
-.capture { max-width: 100%; margin: 0 0 1rem; }
-.capture-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-.capture img { display: block; width: 100%; height: auto; border: 1px solid #829082; }
-.capture figcaption { font-size: .8125rem; color: var(--muted); margin-top: .5rem; }
-footer { padding-block: 1.5rem; color: var(--muted); font-size: .875rem; }
-footer p { margin: 0; }
-.manual-page nav { justify-content: flex-start; }
-.manual { margin-top: 1.5rem; padding: 1.5rem; }
-.manual h1 { font-size: 1.8rem; }
-.manual p { overflow-wrap: anywhere; }
-.manual .eyebrow { color: var(--muted); font-size: .875rem; }
-.manual-source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 1rem; border: 1px solid var(--line); background: #dce0d7; font-size: .9375rem; line-height: 1.65; }
-@media (max-width: 780px) {
-  .page-layout { grid-template-columns: 1fr; gap: 1rem; }
-  .resources { border-bottom: 1px solid var(--line); }
-  .resources ul { display: flex; flex-wrap: wrap; gap: .4rem 1rem; margin-bottom: .9rem; }
-  .resources li { margin: 0; }
-  .sidebar-note { display: none; }
-  main { padding: 1.2rem; }
-}
-@media (max-width: 480px) {
-  .capture-grid { grid-template-columns: 1fr; }
-  .wrap { width: calc(100% - 1.2rem); }
-  nav { gap: .7rem; }
-  .navlinks { gap: .7rem; }
-  h1 { font-size: 1.65rem; }
-  .capabilities { grid-template-columns: 1fr; gap: .25rem; }
-  .capabilities dd { margin-bottom: .6rem; }
-  main { padding: 1rem; }
-}
+/* Shared layout and project switcher: generated from fpl-project-theme. */
+@import url("theme/theme.css");
+/* fungOS-specific platform and document content. */
+.platforms { display:flex; flex-wrap:wrap; gap:12px 22px; list-style:none; padding:0; font-size:14px; }
+.platforms li { display:inline-flex; align-items:center; gap:7px; }
+.platforms img { width:22px; height:22px; opacity:.65; flex:none; }
+.platforms span { color:var(--muted); }
+.builds li,.values li { margin-bottom:12px; }
+.manual-source { background:#dce0d7; }
+.capture { margin-bottom:16px; }
+.capture-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+@media(max-width:480px) { .capture-grid { grid-template-columns:1fr; } }
