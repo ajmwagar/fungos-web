@@ -91,4 +91,4 @@ MCP advertises general tools; DCP advertises current bounded decisions. An appli
 
 ## Source and status
 
-The reviewed spec includes exact version negotiation, catalog/execute/receipt schemas, transport-neutral streaming, a WebSocket binding and an optional parameter-rounds profile. DCP remains a draft; downstream implementations must advertise what they support. This page does not claim every fungOS component is a conforming DCP provider.
+The specification covers version negotiation, catalog/execute/receipt schemas, streaming, a WebSocket binding and an optional parameter-rounds profile. DCP remains a draft. Check each provider's advertised version and capabilities before integrating it.

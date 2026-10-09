@@ -12,7 +12,7 @@ watches:
 
 Unibus is a **transport protocol**, with Rust libraries, routers and service adapters implementing it. It carries display, audio, presence, sensor and control messages between independently useful applications. It does not own their data models, machine provisioning or execution policy.
 
-This guide describes the reviewed source revision above. Protocol definitions and executable tests remain in the [Unibus repository](https://github.com/FuturePresentLabs/unibus). Repository access may be required. An available adapter is not evidence that a deployment has configured it.
+Protocol definitions and tests are in the [Unibus repository](https://github.com/FuturePresentLabs/unibus). Repository access may be required. Enable and configure the adapters needed by your deployment.
 
 ## Architecture and ownership
 

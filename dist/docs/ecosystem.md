@@ -7,7 +7,7 @@ watches:
 ---
 # Component ownership and interfaces
 
-fungOS is a Debian-based operating environment that composes independently useful tools. Not every node runs every application. Shared contracts should be small, versioned and owned once; a discovery observation or shared schema is not permission to read another application's internal state.
+fungOS is a Debian-based operating environment built from independent tools. Install the components your machine needs. Each service exposes a versioned interface and controls access to its own data.
 
 ## Ownership map
 
@@ -26,7 +26,7 @@ fungOS is a Debian-based operating environment that composes independently usefu
 | [DCP](https://fungos.dev/projects/dcp.html) | Bounded state-derived decision contract | Provider internals or execution authority |
 | [Holodeck](https://holodeck.fpl.dev/) | XR room, interaction and bounded Lua room interfaces | CAD/CAM, audio or feed-owner internals |
 
-This table describes interfaces and ownership, not a claim that each integration is installed, public or production-qualified.
+Availability and setup requirements vary by component; follow each project's installation guide.
 
 ## Select a deployment
 
@@ -38,7 +38,7 @@ This table describes interfaces and ownership, not a claim that each integration
 
 Choose [profiles](https://fungos.dev/docs/profiles.html) from actual requirements. A GPU does not automatically grant a compute role; a reachable router does not authorize a MIDI output; a model CID does not grant access to private content.
 
-## Interfaces worth preserving
+## Service interfaces
 
 1. First contact delivers a protected machine-specific claim through a provisioner-owned adapter.
 2. Update verification consumes artifact, manifest and signature paths without owning installation.
@@ -49,6 +49,6 @@ Choose [profiles](https://fungos.dev/docs/profiles.html) from actual requirement
 
 ## Operational status
 
-The public fungOS builder and runtime interfaces are available. Generic outputs are rootfs tarballs; there is no public installer ISO in this slice. Persistent amd64 QEMU edge behavior and isolated visual rollback have documented qualification. Board boot integration and public package-origin deployment remain separate work.
+The fungOS builder produces root filesystem tarballs. Installer ISOs are not yet available. Persistent amd64 QEMU operation and signed visual rollback have documented test results. Board-specific boot images and a public package service are still in development.
 
 Public owner sources: fungOS `README.md`, `base/interfaces.md`, `docs/edge-dogfood.md`. The broader ownership map is reviewed against the original Mycelium `fungOS/ecosystem.md` snapshot and Unibus/DCP contracts; freshness tracking here watches the public fungOS source, not every independent project.

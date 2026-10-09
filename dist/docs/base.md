@@ -43,7 +43,7 @@ sha256sum out-a/fungos-base-amd64.tar out-b/fungos-base-amd64.tar
 diff -u out-a/fungos-base-amd64.packages out-b/fungos-base-amd64.packages
 ```
 
-Matching inputs should produce matching digests. A mismatch is evidence to investigate snapshot drift, undeclared inputs or archive normalization. This page documents the verification procedure; it does not claim a new build was performed when the page was generated.
+Matching inputs should produce matching digests. If they differ, check dependency snapshots, undeclared inputs and archive normalization.
 
 ## Provisioning interfaces
 
