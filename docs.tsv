@@ -1,0 +1,10 @@
+# source	output	site-root	project	source-repository	code-checkout	code-repository
+docs-source/docs/base.md	dist/docs/base.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/ecosystem.md	dist/docs/ecosystem.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/install.md	dist/docs/install.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/profiles.md	dist/docs/profiles.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/pi.md	dist/docs/pi.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/docs/updates.md	dist/docs/updates.html	dist	fungos	https://github.com/ajmwagar/fungos-web	../fungos	https://github.com/ajmwagar/fungos
+docs-source/projects/unibus.md	dist/projects/unibus.html	dist	unibus	https://github.com/ajmwagar/fungos-web	../fpl/unibus	https://github.com/FuturePresentLabs/unibus
+docs-source/projects/dcp.md	dist/projects/dcp.html	dist	dcp	https://github.com/ajmwagar/fungos-web	../fpl/dcp	https://github.com/FuturePresentLabs/dcp
+docs-source/umie.md	dist/projects/umie.html	dist	umie	https://github.com/ajmwagar/fungos-web	../fpl/umie	https://github.com/FuturePresentLabs/umie
