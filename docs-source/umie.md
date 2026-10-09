@@ -1,6 +1,6 @@
 ---
 title: UMIE model support and integration
-source_commit: 39cde7a9487e6b4b1e88718810f81613aa58fc32
+source_commit: b18082b3abdae22b98cc96228c4102575681ff67
 watches:
   - specs
   - crates/umie-spec
@@ -69,7 +69,7 @@ Audio and ASR have their own input, frontend, output-rate and checkpoint contrac
 
 ## Integration entry points
 
-For embedding, begin with the repository's [SDK guide](https://github.com/FuturePresentLabs/umie/blob/39cde7a9487e6b4b1e88718810f81613aa58fc32/docs/sdk.md). It documents Rust, C ABI ownership and streaming contracts. Use that contract for handles and buffer release rather than reproducing internal layouts.
+For embedding, begin with the repository's [SDK guide](https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk.md). It documents Rust, C ABI ownership and streaming contracts. Use that contract for handles and buffer release rather than reproducing internal layouts.
 
 The serving layer exposes health, model discovery and metrics:
 
@@ -79,7 +79,7 @@ GET /v1/models
 GET /metrics
 ```
 
-A running process is not evidence that the selected model has finished loading. Verify readiness and the operation actually required by the client. The repository's [Rust HTTP SDK reference](https://github.com/FuturePresentLabs/umie/blob/39cde7a9487e6b4b1e88718810f81613aa58fc32/docs/sdk-rust-http.md) covers the HTTP client boundary. These repository links may require access.
+A running process is not evidence that the selected model has finished loading. Verify readiness and the operation actually required by the client. The repository's [Rust HTTP SDK reference](https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk-rust-http.md) covers the HTTP client boundary. These repository links may require access.
 
 ## Regenerate the inventory
 
@@ -96,7 +96,7 @@ cargo test -p umie-spec --test incubator_catalog
 
 The deterministic Rust example resolves recipes using the existing sandbox, emits JSON plus Markdown, and checks generated-file drift. It records per-backend resolution errors explicitly. Historical benchmark JSON contributes operation, encoding and the report's last committed revision/date; those dates are commit dates, not inferred measurement timestamps.
 
-The outputs are `docs/reference/model-recipes.json` and `docs/reference/model-support.md`. The [catalog reference](https://github.com/FuturePresentLabs/umie/blob/39cde7a9487e6b4b1e88718810f81613aa58fc32/docs/reference/model-catalog.md) explains evidence levels and limitations. A reviewer must update this page's watched code baseline after examining changed source; regeneration never automatically blesses new behavior.
+The outputs are `docs/reference/model-recipes.json` and `docs/reference/model-support.md`. The [catalog reference](https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/reference/model-catalog.md) explains evidence levels and limitations. A reviewer must update this page's watched code baseline after examining changed source; regeneration never automatically blesses new behavior.
 
 <!-- umie-model-catalog:start -->
 
