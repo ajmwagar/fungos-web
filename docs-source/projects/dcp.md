@@ -87,7 +87,7 @@ The required Node version and setup are documented by the owning repository. Thi
 
 ## DCP, MCP and Unibus
 
-MCP advertises general tools; DCP advertises current bounded decisions. An application may expose both from a provider-owned registry. [Unibus](unibus.html) can lease and route either contract without translating one into the other. Credentials remain local to the edge; catalogs and capability projections do not contain bearer values.
+MCP advertises general tools; DCP advertises current bounded decisions. An application may expose both from a provider-owned registry. [Unibus](https://fungos.dev/projects/unibus.html) can lease and route either contract without translating one into the other. Credentials remain local to the edge; catalogs and capability projections do not contain bearer values.
 
 ## Source and status
 

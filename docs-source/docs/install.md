@@ -23,7 +23,7 @@ Mycelium owns machine identity and service/update policy. Genesis owns bootstrap
 
 ## First boot runbook
 
-1. [Build and inspect](base.html) the chosen runtime profile on a Linux build host.
+1. [Build and inspect](https://fungos.dev/docs/base.html) the chosen runtime profile on a Linux build host.
 2. Assemble a new persistent boot target with a matching kernel and public recovery SSH key. Never clone another enrolled machine's private identity.
 3. Install one first-contact adapter. Provide its machine-specific claim through an owner-only, protected single-use channel.
 4. Boot and verify enrollment independently from Linux startup. A successful boot is not evidence that a claim was redeemed.
@@ -53,7 +53,7 @@ Compare enrolled-certificate, machine-ID and SSH-host-public-key hashes before a
 
 The public `docs/edge-dogfood.md` records an amd64 persistent QEMU edge boot on 8 October 2026: enrolled identity retained, Canvas wallpaper/workspace retained through restart and reboot, and same-version Unibus service repair. Its update runner selected no new release; this is not evidence of an upgrade.
 
-The separate offline visual rollback fixture records recovery from signed failing Canvas and Unibus candidates. It is not a procedure to run on a personal machine or fleet node. See [updates](updates.html) for scope.
+The separate offline visual rollback fixture records recovery from signed failing Canvas and Unibus candidates. It is not a procedure to run on a personal machine or fleet node. See [updates](https://fungos.dev/docs/updates.html) for scope.
 
 ## Recovery
 

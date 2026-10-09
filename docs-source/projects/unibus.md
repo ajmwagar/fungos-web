@@ -104,4 +104,4 @@ For an already configured local MCP edge, `unibus-mcp setup-clients` previews cl
 - `docs/direct-sessions-and-discovery.md`: signed direct sessions and provider boundaries.
 - `docs/midi-bridge-runbook.md`, `docs/mqtt-bridge-runbook.md`, `docs/adb-portable-quickstart.md`: operational recipes.
 
-See the [DCP integration guide](dcp.html) for bounded decisions and the [fungOS component map](../docs/ecosystem.html) for ownership across the environment.
+See the [DCP integration guide](https://fungos.dev/projects/dcp.html) for bounded decisions and the [fungOS component map](https://fungos.dev/docs/ecosystem.html) for ownership across the environment.

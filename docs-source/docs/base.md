@@ -27,7 +27,7 @@ sudo ./base/scripts/inspect.sh base/out/fungos-base-amd64.tar
 ```
 
 1. Run the inexpensive declaration and shell checks first.
-2. Select a supported architecture and [profile](profiles.html).
+2. Select a supported architecture and [profile](https://fungos.dev/docs/profiles.html).
 3. Build on a suitable Linux host.
 4. Retain the tarball, manifest, resolved package list and SHA-256 file from `base/out/`.
 5. Inspect the artifact before disk assembly or provisioning.
@@ -62,4 +62,4 @@ An absent or ambiguous adapter fails visibly. Never let filesystem ordering sele
 
 Inspect `journalctl -u fungos-first-contact`, networkd state, adapter ownership and executable permissions. Remove stale adapters rather than weakening the single-adapter rule. Provision a public-key SSH recovery path; root password login is disabled in the generic image.
 
-See [installation](install.html) for assembling a bootable target and [signed updates](updates.html) for activation and recovery. Owner references: `base/README.md`, `base/RUNBOOK.md`, `base/interfaces.md` and `base/scripts/`.
+See [installation](https://fungos.dev/docs/install.html) for assembling a bootable target and [signed updates](https://fungos.dev/docs/updates.html) for activation and recovery. Owner references: `base/README.md`, `base/RUNBOOK.md`, `base/interfaces.md` and `base/scripts/`.

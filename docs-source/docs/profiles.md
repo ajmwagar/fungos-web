@@ -49,4 +49,4 @@ Keep one activation owner per executable. APT and native package activation must
 
 The public owner documents persistent amd64 QEMU edge operation and isolated visual rollback. The generic builder itself is not an installer. Pi, cloud disk assembly, encrypted-root unlock, whole-set atomic updates and accelerator-specific model qualification have independent evidence requirements.
 
-Follow [installation](install.html), [Pi status](pi.html) or [update qualification](updates.html). Reviewed sources: public fungOS `README.md`, `base/profiles/`, `base/capabilities/`, `THIRD-PARTY.md`.
+Follow [installation](https://fungos.dev/docs/install.html), [Pi status](https://fungos.dev/docs/pi.html) or [update qualification](https://fungos.dev/docs/updates.html). Reviewed sources: public fungOS `README.md`, `base/profiles/`, `base/capabilities/`, `THIRD-PARTY.md`.

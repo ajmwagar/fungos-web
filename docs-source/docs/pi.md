@@ -40,4 +40,4 @@ This is a qualification checklist, not an executable flashing script. Do not wri
 
 The amd64 QEMU evidence does not establish Pi hardware support. A CPU architecture match also does not establish GPU, audio or USB compatibility. Existing Raspberry Pi OS nodes can use independently installed services without reimaging; doing so is different from installing fungOS.
 
-Sources: public fungOS `README.md`, `base/scripts/`, `base/profiles/`. Follow [build prerequisites](base.html), [profile selection](profiles.html) and [first-contact contracts](install.html).
+Sources: public fungOS `README.md`, `base/scripts/`, `base/profiles/`. Follow [build prerequisites](https://fungos.dev/docs/base.html), [profile selection](https://fungos.dev/docs/profiles.html) and [first-contact contracts](https://fungos.dev/docs/install.html).

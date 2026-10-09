@@ -16,14 +16,14 @@ fungOS is a Debian-based operating environment that composes independently usefu
 | fungOS | Runtime profiles, generic rootfs assembly and provisioning seams | Every application's implementation or license |
 | Mycelium | Machine identity, discovery, topology, access and signed distribution | Application transport or inference kernels |
 | Genesis | Bootstrap, disk/image provisioning and first identity delivery | Ongoing application message routing |
-| [Unibus](../projects/unibus.html) | Authorized application envelopes, routing and transport | Domain effects or machine lifecycle |
+| [Unibus](https://fungos.dev/projects/unibus.html) | Authorized application envelopes, routing and transport | Domain effects or machine lifecycle |
 | Canvas | Human/agent composition, surfaces and application-owned controls | Host provisioning or generic transport |
 | Bifrost | Inference-facing interfaces and routing | Machine identity or generic service supervision |
-| [UMIE](../projects/umie.html) | Modular inference execution and model recipes | Fleet authority or arbitrary model compatibility |
+| [UMIE](https://fungos.dev/projects/umie.html) | Modular inference execution and model recipes | Fleet authority or arbitrary model compatibility |
 | Yggdrasil | Compute placement/execution integration | Issuing host identity |
 | Shroud | Workload packaging and execution substrate | Bare-metal provisioning authority |
 | IPFS/storage providers | Content-addressed bytes and caching | Application permission policy |
-| [DCP](../projects/dcp.html) | Bounded state-derived decision contract | Provider internals or execution authority |
+| [DCP](https://fungos.dev/projects/dcp.html) | Bounded state-derived decision contract | Provider internals or execution authority |
 | [Holodeck](https://holodeck.fpl.dev/) | XR room, interaction and bounded Lua room interfaces | CAD/CAM, audio or feed-owner internals |
 
 This table describes interfaces and ownership, not a claim that each integration is installed, public or production-qualified.
@@ -36,7 +36,7 @@ This table describes interfaces and ownership, not a claim that each integration
 - **Compute node:** explicitly placed inference/accelerator services; resource observations inform eligibility, not trust.
 - **Existing workstation:** independently installed services retain the native OS and security model.
 
-Choose [profiles](profiles.html) from actual requirements. A GPU does not automatically grant a compute role; a reachable router does not authorize a MIDI output; a model CID does not grant access to private content.
+Choose [profiles](https://fungos.dev/docs/profiles.html) from actual requirements. A GPU does not automatically grant a compute role; a reachable router does not authorize a MIDI output; a model CID does not grant access to private content.
 
 ## Interfaces worth preserving
 
