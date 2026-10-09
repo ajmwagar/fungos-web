@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-project="umie">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#40304e">
+<meta name="description" content="UMIE is FPL's modular Rust inference engine: one resident base model, validated loadable behavior, and explicit backend interfaces.">
+<title>UMIE — Universal Modular Inference Engine</title>
+<link rel="icon" href="../theme/umie.svg" type="image/svg+xml"><link rel="stylesheet" href="../theme/theme.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="masthead"><div class="wrap"><details class="project-switcher">
+<summary class="brand project-trigger" aria-label="UMIE — switch project"><img src="../theme/umie.svg" width="30" height="30" alt="">UMIE<span class="project-chevron" aria-hidden="true">⌄</span></summary>
+<nav class="project-menu" aria-label="Choose an FPL project">
+<a class="project-option project-fungos" href="../index.html"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS</span></a>
+<a class="project-option project-holodeck" href="https://holodeck.fpl.dev/"><img src="../theme/holodeck.svg" width="30" height="30" alt=""><span>Holodeck</span></a>
+<a class="project-option project-umie" href="../projects/umie.html" aria-current="page"><img src="../theme/umie.svg" width="30" height="30" alt=""><span>UMIE ✓<small class="project-kind">Modular inference engine</small></span></a>
+<div class="project-group">Protocols</div>
+<a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
+<a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
+</nav><script defer src="../theme/switcher.js"></script>
+</details><nav aria-label="Primary navigation"><a href="../index.html">fungOS</a><a href="#interfaces">Interfaces</a><a href="#status">Status</a></nav></div></header>
+<div class="site-grid wrap">
+<aside class="resources" aria-label="Project resources"><h2>UMIE</h2><ul><li><a href="#content">Overview</a></li><li><a href="#behavior">Loadable behavior</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#status">Project status</a></li></ul><p>Future Present Labs<br>Inference substrate</p></aside>
+<main id="content">
+<section><h1>One resident model.<br>Modular behavior.</h1><p class="lead">UMIE — Universal Modular Inference Engine — is FPL’s Rust inference substrate. It keeps a base model resident while loading validated behavior assets around it.</p><p>Built for the fungOS ecosystem, with Apple Silicon and NVIDIA backends behind explicit execution contracts.</p></section>
+<section id="behavior"><h2>Load behavior, keep the base</h2><dl class="capabilities"><dt>Assets</dt><dd>Adapters, constrained decision plans, fusers and quantization recipes have validated identities.</dd><dt>Decisions</dt><dd>RLCD scores bounded, schema-constrained choices directly from model logits.</dd><dt>Model specs</dt><dd>Instruction-bounded Lua resolves model-specific tensor mappings into a backend-neutral Rust plan.</dd><dt>Residency</dt><dd>Rust owns tensor bytes, memory, scheduling and execution. Cache identities include the inputs that change tensor or KV semantics.</dd></dl></section>
+<section id="interfaces"><h2>Explicit interfaces</h2><p>The SDK documents Rust and C ABI integration. The serving layer exposes model discovery, health and monitoring endpoints alongside the System One contract.</p><pre><code>GET /health
+GET /v1/models
+GET /metrics</code></pre><p class="note">Model families and execution features depend on the selected backend and validated model specification.</p></section>
+<section id="status"><h2>Project status</h2><p>Active development. Autoregressive text, diffusion-transformer images and constrained decisions are execution targets; backend and model coverage varies. A readable checkpoint is accepted for execution only when its required operators and native encodings are supported.</p><p><a href="https://github.com/FuturePresentLabs/umie">Repository and SDK documentation ↗</a> <span class="note">Repository access may be required.</span></p></section>
+</main></div>
+<footer class="wrap"><span>UMIE · Future Present Labs</span><a href="../index.html">Part of the fungOS ecosystem</a></footer>
+</body></html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" data-project="unibus">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#21484f"><meta name="description" content="Unibus is FPL's grant-bearing message transport protocol for display, audio, presence, sensors and control.">
+<title>Unibus — Granted message transport</title>
+<link rel="icon" href="../theme/unibus.svg" type="image/svg+xml"><link rel="stylesheet" href="../theme/theme.css">
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="masthead"><div class="wrap"><details class="project-switcher">
+<summary class="brand project-trigger" aria-label="Unibus — switch project"><img src="../theme/unibus.svg" width="30" height="30" alt="">Unibus<span class="project-chevron" aria-hidden="true">⌄</span></summary>
+<nav class="project-menu" aria-label="Choose an FPL project">
+<a class="project-option project-fungos" href="../index.html"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS</span></a>
+<a class="project-option project-holodeck" href="https://holodeck.fpl.dev/"><img src="../theme/holodeck.svg" width="30" height="30" alt=""><span>Holodeck</span></a>
+<a class="project-option project-umie" href="../projects/umie.html"><img src="../theme/umie.svg" width="30" height="30" alt=""><span>UMIE<small class="project-kind">Modular inference engine</small></span></a>
+<div class="project-group">Protocols</div>
+<a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
+<a class="project-option project-unibus" href="../projects/unibus.html" aria-current="page"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus ✓<small class="project-kind">Granted message transport</small></span></a>
+</nav><script defer src="../theme/switcher.js"></script>
+</details><nav aria-label="Primary navigation"><a href="../index.html">fungOS</a><a href="#contract">Contract</a><a href="#implementations">Implementations</a></nav></div></header>
+<div class="site-grid wrap"><aside class="resources" aria-label="Project resources"><h2>Unibus</h2><ul><li><a href="#content">Overview</a></li><li><a href="#contract">Transport contract</a></li><li><a href="#grants">Access grants</a></li><li><a href="#implementations">Implementations</a></li></ul><p>Future Present Labs<br>Protocol</p></aside>
+<main id="content">
+<section><h1>One bus for every surface.</h1><p class="lead">Unibus is a message transport protocol for display, audio, presence, sensors and control across heterogeneous machines.</p><p>Applications own their data and domain contracts. Unibus supplies envelopes, framing, routing and access grants.</p></section>
+<section id="contract"><h2>A narrow transport contract</h2><dl class="capabilities"><dt>Envelopes</dt><dd>Messages carry routing information and bounded lifetime. The transport does not interpret application payloads.</dd><dt>Framing</dt><dd>A big-endian length prefix, JSON envelope and binary payload form the wire format.</dd><dt>Delivery</dt><dd>Commands, streams and snapshots have separate scheduling classes.</dd><dt>Connections</dt><dd>Router implementations support TCP and explicitly configured QUIC/TLS connections.</dd></dl></section>
+<section id="grants"><h2>Grant-bearing connections</h2><p>Node grants scope zones, namespaced capabilities, screen anchors, sites and roles. Authentication terminates at registration; application-level permissions remain with the owning service.</p><p class="note">Network reachability alone is not permission to view a surface or control an instrument. Deployments must configure trust and grants.</p></section>
+<section id="implementations"><h2>Routers and adapters</h2><p>The Rust workspace provides the protocol library, hub/router and adapters for services including MIDI, MQTT and ADB. Applications can advertise MCP tools and DCP decisions through provider-owned capability registries.</p><p><a href="https://github.com/FuturePresentLabs/unibus">Repository and integration runbooks ↗</a> <span class="note">Repository access may be required.</span></p><p><a href="https://dcp.fpl.dev/">Decision Catalog Protocol ↗</a></p></section>
+</main></div><footer class="wrap"><span>Unibus · Future Present Labs</span><a href="../index.html">Part of the fungOS ecosystem</a></footer>
+</body></html>

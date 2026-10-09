@@ -21,3 +21,8 @@ before committing/publishing; otherwise the shared component can be lost.
 Theme CSS is AGPL-3.0-or-later; its full license ships at `dist/theme/LICENSE`.
 This does not relicense site content or upstream artwork. Asset terms are in
 `ASSET-NOTICES.md` and `dist/theme/ASSET-NOTICES.md`.
+
+UMIE and Unibus overview content lives in `dist/projects/`. The shared installer
+recognizes these registered paths and applies each project's theme and current
+menu selection. Update content here; regenerate logos and navigation from the
+theme repository. Unibus is grouped with protocols, while UMIE is an application.
