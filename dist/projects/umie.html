@@ -1,15 +1,5 @@
 <!doctype html>
-<html lang="en" data-project="umie">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#40304e">
-<meta name="description" content="UMIE is FPL's modular Rust inference engine: one resident base model, validated loadable behavior, and explicit backend interfaces.">
-<title>UMIE — Universal Modular Inference Engine</title>
-<link rel="icon" href="../theme/umie.svg" type="image/svg+xml"><link rel="stylesheet" href="../theme/theme.css">
-</head>
-<body>
-<a class="skip" href="#content">Skip to content</a>
-<header class="masthead"><div class="wrap"><details class="project-switcher">
+<html lang="en" data-project="umie"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UMIE model support and integration</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/umie.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
 <summary class="brand project-trigger" aria-label="UMIE — switch project"><img src="../theme/umie.svg" width="30" height="30" alt="">UMIE<span class="project-chevron" aria-hidden="true">⌄</span></summary>
 <nav class="project-menu" aria-label="Choose an FPL project">
 <a class="project-option project-fungos" href="../index.html"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS</span></a>
@@ -19,16 +9,134 @@
 <a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
 <a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
 </nav><script defer src="../theme/switcher.js"></script>
-</details><nav aria-label="Primary navigation"><a href="../index.html">fungOS</a><a href="#interfaces">Interfaces</a><a href="#status">Status</a></nav></div></header>
-<div class="site-grid wrap">
-<aside class="resources" aria-label="Project resources"><h2>UMIE</h2><ul><li><a href="#content">Overview</a></li><li><a href="#behavior">Loadable behavior</a></li><li><a href="#interfaces">Interfaces</a></li><li><a href="#status">Project status</a></li></ul><p>Future Present Labs<br>Inference substrate</p></aside>
-<main id="content">
-<section><h1>One resident model.<br>Modular behavior.</h1><p class="lead">UMIE — Universal Modular Inference Engine — is FPL’s Rust inference substrate. It keeps a base model resident while loading validated behavior assets around it.</p><p>Built for the fungOS ecosystem, with Apple Silicon and NVIDIA backends behind explicit execution contracts.</p></section>
-<section id="behavior"><h2>Load behavior, keep the base</h2><dl class="capabilities"><dt>Assets</dt><dd>Adapters, constrained decision plans, fusers and quantization recipes have validated identities.</dd><dt>Decisions</dt><dd>RLCD scores bounded, schema-constrained choices directly from model logits.</dd><dt>Model specs</dt><dd>Instruction-bounded Lua resolves model-specific tensor mappings into a backend-neutral Rust plan.</dd><dt>Residency</dt><dd>Rust owns tensor bytes, memory, scheduling and execution. Cache identities include the inputs that change tensor or KV semantics.</dd></dl></section>
-<section id="interfaces"><h2>Explicit interfaces</h2><p>The SDK documents Rust and C ABI integration. The serving layer exposes model discovery, health and monitoring endpoints alongside the System One contract.</p><pre><code>GET /health
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="umie.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="umie.md">Copy for LLM</button><a href="umie.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="umie-one-resident-model-modular-behavior">UMIE: one resident model, modular behavior</h1>
+<p>UMIE—the Universal Modular Inference Engine—is a Rust inference substrate for the fungOS ecosystem. A base model stays resident; validated behavior assets change its operation. Model-specific Lua recipes resolve into typed plans. Rust owns checkpoint bytes, memory, kernels, scheduling and execution.</p>
+<p>UMIE has native Metal and CUDA paths, a Rust SDK, C ABI and serving interfaces. Model coverage is a set of explicit operations and encodings, rather than a blanket promise that every model in a family works. The engine is in active development. Model weights and their upstream licenses are separate from UMIE's Apache-2.0 software license.</p>
+<h2 id="what-support-means">What “support” means</h2>
+<p>A recipe names a model and maps its tensors. A schema check validates that plan. Checkpoint admission then checks actual tensor names, dtypes and derived shapes. A backend must implement the required operators and encodings. Finally, real checkpoint execution and semantic parity need their own evidence.</p>
+<p>This page separates those levels. Historical benchmark records are reported as operations performed at their recorded revisions. The documentation work did not rerun GPU models, establish current quality, or certify every configuration. A missing record means unknown. A recipe or timing result alone is insufficient evidence of reliable generation.</p>
+<h2 id="model-families-and-execution-evidence">Model families and execution evidence</h2>
+<table><thead><tr><th>Models</th><th>Architecture / purpose</th><th>Evidence in source</th><th>Limits</th></tr></thead><tbody>
+<tr><td>Qwen2.5 1.5B Instruct</td><td>Dense causal decoder; text and constrained decisions</td><td>Recorded Metal BF16/Q8 and CUDA BF16/Q4/Q8 greedy generation; native RLCD records on both backends</td><td>Results are historical and encoding specific; not evidence for every Qwen2.5 size</td></tr>
+<tr><td>Llama 3.2 1B Instruct</td><td>Standard dense causal attention</td><td>Checked-in model recipe and contract fixtures</td><td>Inventory establishes schema validation, not checkpoint generation parity</td></tr>
+<tr><td>Granite 4.1 8B</td><td>Standard attention with model-specific scaling</td><td>Recorded CUDA Q4/Q8 generation; Metal/CUDA primitive records</td><td>Primitive execution is narrower than whole-model generation</td></tr>
+<tr><td>Qwen3 8B / 30B-A3B; Qwen3.5 0.8B / 4B</td><td>Dense, MoE and hybrid-attention recipes</td><td>Typed recipe resolution</td><td>Consult operators and materialization admission before execution; family recognition is not full coverage</td></tr>
+<tr><td>Ornith 1.5 9B / 35B-A3B</td><td>Hybrid decoder recipes</td><td>Historical CUDA greedy generation records, including native NVFP4 on the 35B recipe</td><td>Older README WIP notes describe earlier scope; prefer operation records at explicit revisions</td></tr>
+<tr><td>Swift-Qwen3.8 27B; Qwen3.8-Flash-Next</td><td>Hybrid decoder recipes</td><td>Historical CUDA greedy generation records, with NVFP4 paths</td><td>Backend-, revision- and encoding-specific; no current hardware rerun in this pass</td></tr>
+<tr><td>GPC-1; Granite 3.0 1B-A400M; Nemotron 3 Nano 30B-A3B</td><td>Additional decoder targets</td><td>Model recipes, typed family validation and subsystem source</td><td>Recipe presence does not establish generation parity</td></tr>
+<tr><td>Qwen3-VL 8B text</td><td>Text decoder extraction</td><td>Explicit text-only recipe</td><td>Does not imply image input or full vision-language execution</td></tr>
+<tr><td>Qwen2.5 3B/7B/14B/32B; Coder 7B/14B/32B; Qwen3 4B/14B/32B; Granite 3.1 2B/8B</td><td>Incubator recipes</td><td>Pinned upstream metadata and fixture/schema tests</td><td>Catalog explicitly declares non-production, schema-validated/unverified; no loading or generation claim</td></tr>
+</tbody></table>
+<p>Recorded greedy generation operations are separated from embeddings, RMSNorm, RoPE, linear kernels and decoder-stack measurements in the generated evidence table below. CPU RLCD reduction is an algorithmic operation, not a CPU implementation of every whole model.</p>
+<h2 id="audio-and-structured-policy-models">Audio and structured policy models</h2>
+<table><thead><tr><th>Model / subsystem</th><th>Implemented boundary</th><th>Evidence and scope</th></tr></thead><tbody>
+<tr><td>Mel-band Roformer Deux; BS-Roformer SW 6-stem</td><td>Typed separation recipes, separation and streaming modules</td><td>Existing stream parity and transport tests; resident Metal test is hardware dependent. Schema checks alone do not establish output quality</td></tr>
+<tr><td>ACE-Step 1.5 standard-turbo</td><td>Audio-generation recipe and <code>umie-acestep</code> backend ABI</td><td>Typed geometry/assets/admission and execution module; no end-to-end quality or hardware claim from this documentation pass</td></tr>
+<tr><td>VoxCPM2 behavior assets</td><td>Speech-generation plan, voice behavior as a loadable asset, <code>umie-voxcpm</code> execution boundary</td><td>Base and behavior identities are distinct; custom voice recipes are not a claim about arbitrary voice packages</td></tr>
+<tr><td>Nemotron 3.5 ASR streaming</td><td>Native FastConformer/RNN-T frontend, encoder and transducer runtime in <code>umie-asr</code></td><td>Source declares spike scope. This is not a Lua catalog entry and has not been hardware verified in this pass</td></tr>
+<tr><td>Discogs-EffNet</td><td>Audio embeddings compatible with Essentia's Discogs-EffNet pipeline in <code>umie-embedding</code></td><td>Pinned assets and frontend identifiers; audio embeddings are distinct from text sentence embeddings</td></tr>
+<tr><td>Taiga S1</td><td>Typed-option policy assembled from generic encoder operations</td><td>Recipe requires admitted checkpoint configuration and shape facts; default model-catalog resolution cannot supply those facts</td></tr>
+<tr><td>SAM Audio small TV</td><td>Prompt-aware audio separation recipe</td><td>Recipe/plan boundary exists; Roformer geometry or coverage should not be inferred for SAM Audio</td></tr>
+</tbody></table>
+<p>Audio and ASR have their own input, frontend, output-rate and checkpoint contracts. They do not become interchangeable merely because UMIE serves them. Image diffusion-transformer work is a separate execution target; this matrix does not invent image model coverage absent a reviewed recipe and execution record.</p>
+<h2 id="behavior-and-data-boundaries">Behavior and data boundaries</h2>
+<ul>
+<li><strong>Model recipes:</strong> instruction-bounded, I/O-free Lua resolves tensor mappings and materialization policy. A recipe is not authenticated just because its sandbox accepts it; admission/signature policy belongs to callers.</li>
+<li><strong>Resident base:</strong> tensor materialization is owned by Rust. Adapters, constrained decision plans and other admitted assets have explicit identities.</li>
+<li><strong>RLCD:</strong> bounded schema-constrained choices are scored from model logits; tokenizer continuation boundaries are owned by <code>umie-tokenizer</code>.</li>
+<li><strong>Cache identity:</strong> inputs that change tensors or KV semantics must participate in identity. A matching model name alone is insufficient.</li>
+<li><strong>Checkpoints:</strong> SafeTensors metadata and shard indices are validated before execution. A readable GGUF checkpoint is not automatically executable; its native encoding must have a backend path.</li>
+</ul>
+<h2 id="integration-entry-points">Integration entry points</h2>
+<p>For embedding, begin with the repository's <a href="https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk.md">SDK guide</a>. It documents Rust, C ABI ownership and streaming contracts. Use that contract for handles and buffer release rather than reproducing internal layouts.</p>
+<p>The serving layer exposes health, model discovery and metrics:</p>
+<pre><code class="language-text">GET /health
 GET /v1/models
-GET /metrics</code></pre><p class="note">Model families and execution features depend on the selected backend and validated model specification.</p></section>
-<section id="status"><h2>Project status</h2><p>Active development. Autoregressive text, diffusion-transformer images and constrained decisions are execution targets; backend and model coverage varies. A readable checkpoint is accepted for execution only when its required operators and native encodings are supported.</p><p><a href="https://github.com/FuturePresentLabs/umie">Repository and SDK documentation ↗</a> <span class="note">Repository access may be required.</span></p></section>
-</main></div>
-<footer class="wrap"><span>UMIE · Future Present Labs</span><a href="../index.html">Part of the fungOS ecosystem</a></footer>
-</body></html>
+GET /metrics
+</code></pre>
+<p>A running process is not evidence that the selected model has finished loading. Verify readiness and the operation actually required by the client. The repository's <a href="https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/sdk-rust-http.md">Rust HTTP SDK reference</a> covers the HTTP client boundary. These repository links may require access.</p>
+<h2 id="regenerate-the-inventory">Regenerate the inventory</h2>
+<p>UMIE owns the catalog and its provenance. From its checked-out repository:</p>
+<pre><code class="language-sh">scripts/catalog-models
+scripts/catalog-models --check
+scripts/catalog-models --site-source /path/to/fungos-web/docs-source/umie.md
+scripts/catalog-models --site-source /path/to/fungos-web/docs-source/umie.md --check
+cargo test -p umie-spec --example model_catalog
+cargo test -p umie-spec --test incubator_catalog
+</code></pre>
+<p>The deterministic Rust example resolves recipes using the existing sandbox, emits JSON plus Markdown, and checks generated-file drift. It records per-backend resolution errors explicitly. Historical benchmark JSON contributes operation, encoding and the report's last committed revision/date; those dates are commit dates, not inferred measurement timestamps.</p>
+<p>The outputs are <code>docs/reference/model-recipes.json</code> and <code>docs/reference/model-support.md</code>. The <a href="https://github.com/FuturePresentLabs/umie/blob/b18082b3abdae22b98cc96228c4102575681ff67/docs/reference/model-catalog.md">catalog reference</a> explains evidence levels and limitations. A reviewer must update this page's watched code baseline after examining changed source; regeneration never automatically blesses new behavior.</p>
+
+<h1 id="umie-model-recipe-matrix">UMIE model recipe matrix</h1>
+<p>Generated by <code>scripts/catalog-models</code>. A schema pass is <strong>not</strong> working model support. Both columns use synthetic host facts and default recipe inputs; no weights, device, latency, quality, or parity are tested. Execution remains unverified by this catalog. Recipes requiring admitted checkpoint context can be unresolved here without being unsupported by their owning subsystem.</p>
+<table><thead><tr><th>Model / recipe</th><th>Architecture family</th><th>Modality</th><th>Metal schema</th><th>CUDA schema</th><th>Hardware execution</th></tr></thead><tbody>
+<tr><td>ACE-Step/Ace-Step1.5-standard-turbo (<code>specs/ace_step_1_5_turbo.lua</code>)</td><td>ace_step_1_5</td><td>audio generation</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>becruily/mel-band-roformer-deux (<code>specs/bs_roformer_becruily_deux.lua</code>)</td><td>mel_band_roformer</td><td>audio separation</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>jarredou/bs-roformer-sw-6stem (<code>specs/bs_roformer_sw_6stem.lua</code>)</td><td>bs_roformer</td><td>audio separation</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>harshatheg/GPC-1 (<code>specs/gpc1.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ibm-granite/granite-3.0-1b-a400m (<code>specs/granite_3_0_1b_a400m.lua</code>)</td><td>granite_moe</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b (<code>specs/granite_4_1_8b.lua</code>)</td><td>granite</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ibm-granite/granite-3.1-2b-instruct (<code>specs/incubator/granite_3_1_2b_instruct.lua</code>)</td><td>granite</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ibm-granite/granite-3.1-8b-instruct (<code>specs/incubator/granite_3_1_8b_instruct.lua</code>)</td><td>granite</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-14B-Instruct (<code>specs/incubator/qwen2_5_14b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-32B-Instruct (<code>specs/incubator/qwen2_5_32b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-3B-Instruct (<code>specs/incubator/qwen2_5_3b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-7B-Instruct (<code>specs/incubator/qwen2_5_7b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-Coder-14B-Instruct (<code>specs/incubator/qwen2_5_coder_14b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-Coder-32B-Instruct (<code>specs/incubator/qwen2_5_coder_32b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-Coder-7B-Instruct (<code>specs/incubator/qwen2_5_coder_7b_instruct.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3-14B (<code>specs/incubator/qwen3_14b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3-32B (<code>specs/incubator/qwen3_32b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3-4B (<code>specs/incubator/qwen3_4b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>meta-llama/Llama-3.2-1B-Instruct (<code>specs/llama_3_2_1b.lua</code>)</td><td>llama</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-NVFP4 (<code>specs/nemotron_3_nano_30b_a3b.lua</code>)</td><td>nemotron_h</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B (<code>specs/ornith_1_5_9b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-35B-A3B (<code>specs/ornith_35b_a3b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct (<code>specs/qwen2_5_1_5b.lua</code>)</td><td>qwen2</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3-30B-A3B (<code>specs/qwen3_30b_a3b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3.5-0.8B (<code>specs/qwen3_5_0_8b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3.5-4B (<code>specs/qwen3_5_4b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3-8B (<code>specs/qwen3_8b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen-Image-2.1/text_encoder (<code>specs/qwen3_vl_8b_text.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>Qwen/Qwen3.8-Flash-Next (<code>specs/qwen4_exp_flash_next.lua</code>)</td><td>qwen4_exp</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>facebook/sam-audio-small-tv (<code>specs/sam_audio_small_tv.lua</code>)</td><td>sam_audio</td><td>audio separation</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>ukisai/Swift-Qwen3.8-27b (<code>specs/swift_qwen3_8_27b.lua</code>)</td><td>qwen3_5</td><td>text decoder</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+<tr><td>taiga_s1 (<code>specs/taiga_s1.lua</code>)</td><td>requires admitted asset context</td><td>unresolved</td><td>not resolved</td><td>not resolved</td><td>Not tested by catalog</td></tr>
+<tr><td>FuturePresentLabs/tts-jarvis (<code>specs/voxcpm2_jarvis.lua</code>)</td><td>voxcpm2</td><td>speech synthesis</td><td>schema validated</td><td>schema validated</td><td>Not tested by catalog</td></tr>
+</tbody></table>
+<p>JSON includes resolver errors and evidence. Incubator upstream revisions and metadata hashes are maintained in <code>specs/incubator/catalog.json</code>; the catalog's tests compare them to fixtures. <code>training_policy_reference.lua</code> is a training policy, not a model, and is excluded. A resolved decoder family can still be rejected by model compilation or a backend with missing operators.</p>
+<h2 id="recorded-runtime-operations">Recorded runtime operations</h2>
+<p>Derived from checked-in benchmark reports, separately from schema resolution. These are historical operation records, not tests performed by this command or a guarantee of correctness. Date and revision refer to the report's last committed change, not a measurement timestamp. Missing recorded evidence means unknown, not unsupported.</p>
+<table><thead><tr><th>Model</th><th>Backend</th><th>Recorded operations / encodings</th><th>Report revision/date</th></tr></thead><tbody>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>CUDA</td><td>linear-resident / bf16</td><td>38c34d4205b5a8c29c6b240dc434f3c8e4011e1e 2026-09-20</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>CUDA</td><td>rms-norm / bf16</td><td>62503159c98a10ebca7db3b3b59dd08994fe22c7 2026-09-20</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>CUDA</td><td>generate-greedy / q4_block32</td><td>b1f724b774a9bd5db3efc48a2bfcd457f703690e 2026-09-20</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>CUDA</td><td>generate-greedy / q8_block32</td><td>0fb2025236e6641856537f2ec35c91c8358e8f9c 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>decoder-stack / bf16</td><td>15e408eb39fe567da8a8f2595e71f31bd1bf6b93 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>token-embed-rms-norm / bf16</td><td>ea06ee5166673729b2487e814a7a427f6d4eaa49 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>generate-greedy / bf16</td><td>be18cfcb011bddc9b171ea184af8dd18dd2d5e94 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>generate-greedy / q4_block32</td><td>be18cfcb011bddc9b171ea184af8dd18dd2d5e94 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>generate-greedy / q8_block32</td><td>be18cfcb011bddc9b171ea184af8dd18dd2d5e94 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>rlcd-native / bf16</td><td>0048c87336e1a2d5f28ca1c92bd7e87856f57e75 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>CUDA</td><td>generate-greedy / q4_block32</td><td>a042d2ede0a01997b9c24acad92ad4875484ef32 2026-09-22</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>CUDA</td><td>rope-resident / f32-activation</td><td>e2f2ebe87d2d9f226dcd9e12be1d3913efdcf477 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>CUDA</td><td>generate-greedy / bf16</td><td>a042d2ede0a01997b9c24acad92ad4875484ef32 2026-09-22</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>CUDA</td><td>rms-norm-resident / bf16</td><td>e2f2ebe87d2d9f226dcd9e12be1d3913efdcf477 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>CUDA</td><td>rms-norm / bf16</td><td>62503159c98a10ebca7db3b3b59dd08994fe22c7 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>CUDA</td><td>rope-resident / f32-activation</td><td>e2f2ebe87d2d9f226dcd9e12be1d3913efdcf477 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-35B-A3B</td><td>CUDA</td><td>generate-greedy / native_nvfp4</td><td>30f246d759440d284400c9342fc1e1f271eee693 2026-09-26</td></tr>
+<tr><td>ukisai/Swift-Qwen3.8-27b</td><td>CUDA</td><td>generate-greedy / native_nvfp4</td><td>fc5b91b7f35b50828b11bd41df0d1ed3a9fe5958 2026-09-22</td></tr>
+<tr><td>ukisai/Swift-Qwen3.8-27b</td><td>CUDA</td><td>generate-greedy / q4_block32</td><td>a042d2ede0a01997b9c24acad92ad4875484ef32 2026-09-22</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>CUDA</td><td>rope-resident / f32-activation</td><td>1d3f949b0a6ef7bbcf862653e4c1d88e54a3723d 2026-10-02</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>rlcd-native / bf16</td><td>fc38d541ddd5eecd65748a11bdc4ed0ba129e0b4 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>generate-greedy / bf16</td><td>e8d18016f659d1effb30cf317dbf77c7701aede1 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>generate-greedy / q8_block32</td><td>e8d18016f659d1effb30cf317dbf77c7701aede1 2026-09-20</td></tr>
+<tr><td>ibm-granite/granite-4.1-8b</td><td>Metal</td><td>rope-resident / f32-activation</td><td>e2f2ebe87d2d9f226dcd9e12be1d3913efdcf477 2026-09-20</td></tr>
+<tr><td>ornith-ai/Ornith-1.5-9B</td><td>Metal</td><td>rope-resident / f32-activation</td><td>e2f2ebe87d2d9f226dcd9e12be1d3913efdcf477 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>decoder-stack / bf16</td><td>a3a7d9449dca5c57eb7b6a03bb9cc147822421d7 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>linear-resident / bf16</td><td>38c34d4205b5a8c29c6b240dc434f3c8e4011e1e 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen2.5-1.5B-Instruct</td><td>Metal</td><td>token-embed-rms-norm / bf16</td><td>f79e045d7641fd01b2212ec5b982d05780d055ae 2026-09-20</td></tr>
+<tr><td>qwen/qwen2.5-1.5b-instruct-rlcd</td><td>CPU</td><td>rlcd-reduce / log-f32</td><td>aba1499ccc0320364a6fa5f923a889debb10d0f0 2026-09-20</td></tr>
+<tr><td>Qwen/Qwen3.8-Flash-Next</td><td>CUDA</td><td>generate-greedy / native_nvfp4</td><td>f03a993500d95de439cb051afb4472cbfb4c8aba 2026-09-27</td></tr>
+</tbody></table>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/cc4bad521c8959002bcb3d848d9bb526fda653a8"><code>cc4bad5</code></a> · 2026-10-08 · Review UMIE catalog projection and pin its source baseline</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/cc4bad521c8959002bcb3d848d9bb526fda653a8/docs-source/umie.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/FuturePresentLabs/umie/commit/b18082b3abdae22b98cc96228c4102575681ff67"><code>b18082b</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>specs</code></li><li><code>crates/umie-spec</code></li><li><code>crates/umie-model</code></li><li><code>crates/umie-metal</code></li><li><code>crates/umie-cuda</code></li><li><code>crates/umie-asr</code></li><li><code>crates/umie-embedding</code></li><li><code>crates/umie-voxcpm</code></li><li><code>crates/umie-acestep</code></li><li><code>crates/umie-separate</code></li><li><code>docs/sdk.md</code></li><li><code>docs/reference/model-catalog.md</code></li><li><code>benchmarks/results</code></li></ul></details></footer></main></body></html>

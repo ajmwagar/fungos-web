@@ -1,14 +1,5 @@
 <!doctype html>
-<html lang="en" data-project="unibus">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#21484f"><meta name="description" content="Unibus is FPL's grant-bearing message transport protocol for display, audio, presence, sensors and control.">
-<title>Unibus — Granted message transport</title>
-<link rel="icon" href="../theme/unibus.svg" type="image/svg+xml"><link rel="stylesheet" href="../theme/theme.css">
-</head>
-<body>
-<a class="skip" href="#content">Skip to content</a>
-<header class="masthead"><div class="wrap"><details class="project-switcher">
+<html lang="en" data-project="unibus"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unibus — transport, grants and integration</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/unibus.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
 <summary class="brand project-trigger" aria-label="Unibus — switch project"><img src="../theme/unibus.svg" width="30" height="30" alt="">Unibus<span class="project-chevron" aria-hidden="true">⌄</span></summary>
 <nav class="project-menu" aria-label="Choose an FPL project">
 <a class="project-option project-fungos" href="../index.html"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS</span></a>
@@ -18,12 +9,75 @@
 <a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
 <a class="project-option project-unibus" href="../projects/unibus.html" aria-current="page"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus ✓<small class="project-kind">Granted message transport</small></span></a>
 </nav><script defer src="../theme/switcher.js"></script>
-</details><nav aria-label="Primary navigation"><a href="../index.html">fungOS</a><a href="#contract">Contract</a><a href="#implementations">Implementations</a></nav></div></header>
-<div class="site-grid wrap"><aside class="resources" aria-label="Project resources"><h2>Unibus</h2><ul><li><a href="#content">Overview</a></li><li><a href="#contract">Transport contract</a></li><li><a href="#grants">Access grants</a></li><li><a href="#implementations">Implementations</a></li></ul><p>Future Present Labs<br>Protocol</p></aside>
-<main id="content">
-<section><h1>One bus for every surface.</h1><p class="lead">Unibus is a message transport protocol for display, audio, presence, sensors and control across heterogeneous machines.</p><p>Applications own their data and domain contracts. Unibus supplies envelopes, framing, routing and access grants.</p></section>
-<section id="contract"><h2>A narrow transport contract</h2><dl class="capabilities"><dt>Envelopes</dt><dd>Messages carry routing information and bounded lifetime. The transport does not interpret application payloads.</dd><dt>Framing</dt><dd>A big-endian length prefix, JSON envelope and binary payload form the wire format.</dd><dt>Delivery</dt><dd>Commands, streams and snapshots have separate scheduling classes.</dd><dt>Connections</dt><dd>Router implementations support TCP and explicitly configured QUIC/TLS connections.</dd></dl></section>
-<section id="grants"><h2>Grant-bearing connections</h2><p>Node grants scope zones, namespaced capabilities, screen anchors, sites and roles. Authentication terminates at registration; application-level permissions remain with the owning service.</p><p class="note">Network reachability alone is not permission to view a surface or control an instrument. Deployments must configure trust and grants.</p></section>
-<section id="implementations"><h2>Routers and adapters</h2><p>The Rust workspace provides the protocol library, hub/router and adapters for services including MIDI, MQTT and ADB. Applications can advertise MCP tools and DCP decisions through provider-owned capability registries.</p><p><a href="https://github.com/FuturePresentLabs/unibus">Repository and integration runbooks ↗</a> <span class="note">Repository access may be required.</span></p><p><a href="https://dcp.fpl.dev/">Decision Catalog Protocol ↗</a></p></section>
-</main></div><footer class="wrap"><span>Unibus · Future Present Labs</span><a href="../index.html">Part of the fungOS ecosystem</a></footer>
-</body></html>
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="unibus.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="unibus.md">Copy for LLM</button><a href="unibus.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="unibus">Unibus</h1>
+<p>Unibus is a <strong>transport protocol</strong>, with Rust libraries, routers and service adapters implementing it. It carries display, audio, presence, sensor and control messages between independently useful applications. It does not own their data models, machine provisioning or execution policy.</p>
+<p>This guide describes the reviewed source revision above. Protocol definitions and executable tests remain in the <a href="https://github.com/FuturePresentLabs/unibus">Unibus repository</a>. Repository access may be required. An available adapter is not evidence that a deployment has configured it.</p>
+<h2 id="architecture-and-ownership">Architecture and ownership</h2>
+<table><thead><tr><th>Layer</th><th>Owner</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td>L1 transport</td><td>Unibus</td><td>Envelopes, framing, freshness, routing, grants and scheduling</td></tr>
+<tr><td>L2 domain contracts</td><td>Each application</td><td>Message meaning, schemas, state, validation and effects</td></tr>
+<tr><td>Identity and discovery</td><td>Deployment-selected provider</td><td>Certificates, trusted peers and candidate endpoints</td></tr>
+<tr><td>Bulk assets</td><td>Storage/content provider</td><td>Models, media and content-addressed bytes</td></tr>
+</tbody></table>
+<p>Use one provider-owned contract for each domain. Canvas owns its composition commands; a MIDI edge owns exact device packets; DCP providers own legal actions. The router routes by destination, screen anchor, zone, capability and lifetime; application bodies remain opaque.</p>
+<h2 id="wire-contract">Wire contract</h2>
+<p>The stream format is a four-byte unsigned big-endian length followed by a JSON envelope and optional binary payload. The length covers the envelope and payload, excluding its own prefix. The decoder requires the declared binary byte count to match the trailing bytes.</p>
+<p>The envelope carries schema version, installation and producer identity, destination or screen target, request identity, timestamp, lifetime, binary payload size and a message whose routing name is <code>message_type</code>. Schema versions 1 and 2 share framing; golden wire fixtures protect compatibility with the original router.</p>
+<p>The current L1 maximum frame is 16 MiB, with a default control freshness window of 30 seconds and bounded future clock skew. These are validation bounds, not recommended media packet sizes. Put bulk model and audio files on the content plane, and send small references or control events on the bus.</p>
+<p>Commands, streams and snapshots use separate scheduling classes with bounded peer queues. Delivery policy is contract-specific; do not assume an acknowledged enqueue means an application applied an effect.</p>
+<h2 id="transport-choices">Transport choices</h2>
+<table><thead><tr><th>Path</th><th>Use</th><th>Security boundary</th></tr></thead><tbody>
+<tr><td>Routed TCP</td><td>Local router and compatibility deployments</td><td>Plaintext listeners are loopback-only by default; remote use needs an explicitly secured path</td></tr>
+<tr><td>Routed QUIC/TLS</td><td>Encrypted router connections</td><td>Configure certificate, key and authenticated server name</td></tr>
+<tr><td>Direct QUIC/mTLS</td><td>Authorized peer-to-peer data</td><td>Verify signed session claims and both peer certificate bindings</td></tr>
+<tr><td>Optional discovery adapters</td><td>Static configuration, DNS or Mycelium</td><td>Reachability does not grant authority</td></tr>
+</tbody></table>
+<p>Direct-session claims bind both producer identities, peer keys, exact allowed kinds, payload bounds, endpoints and expiry. A failed direct connection may use an explicitly supplied routed fallback; it must not weaken authentication. Mycelium can supply discovery or certificates without carrying or interpreting Unibus frames.</p>
+<h2 id="grants-and-privacy">Grants and privacy</h2>
+<p>Node grants cover zones, namespaced capabilities, screen anchors, site and role. Schema-v2 publishers explicitly declare permitted kinds and publishing zones, anchors and producers. Authentication ends at registration; downstream services must still authorize domain effects.</p>
+<p>Keep credentials in host-managed files or environment, never in catalogs, scripts, asset manifests or discovery advertisements. Grant a MIDI source only its intended destination and kinds. Separate permission to see a Canvas surface from permission to interact with it. A valid DCP catalog is not an execution grant.</p>
+<p>An authorized recipient can retain received bytes. Transport grants do not promise screenshot prevention, unsaveable media or retroactive erasure. Private asset distribution also needs the storage owner's access policy.</p>
+<h2 id="adapters-and-interfaces">Adapters and interfaces</h2>
+<table><thead><tr><th>Implementation</th><th>Contract / scope</th><th>Application responsibility</th></tr></thead><tbody>
+<tr><td>MQTT bridge</td><td>Exact topics and binary payloads over <code>mqtt.publish.v1</code></td><td>Broker sessions, retained state and MQTT acknowledgements</td></tr>
+<tr><td>MIDI bridge</td><td>Ordered exact packets over <code>midi.packet.v1</code></td><td>Explicit input/output device selection and performance validation</td></tr>
+<tr><td>ADB bridge</td><td>Portable remote device attachment and operations</td><td>USB authorization, device access and credential handoff</td></tr>
+<tr><td>MCP edge</td><td>Leased provider tools and invocation routing</td><td>Tool semantics and mutation authority</td></tr>
+<tr><td>DCP edge</td><td>Canonical revision-bound catalogs and execution receipts</td><td>Finite actions, state checks and execution</td></tr>
+<tr><td>Embedded SDK</td><td>Rust session; Lua/Luau and C ABI bindings</td><td>VM lifecycle, update budget, resynchronization and sandbox policy</td></tr>
+</tbody></table>
+<p>MCP and DCP are parallel bindings. Unibus does not turn arbitrary tools into bounded DCP actions. The DCP client edge revalidates live provider leases and exact catalog/state revisions before forwarding execution.</p>
+<h2 id="embedded-sdk-limits">Embedded SDK limits</h2>
+<p><code>publish</code> queues an object body and returns a request ID. Consume replies to determine delivery or authorization. <code>poll</code> is nonblocking; <code>status</code> reports connection state and dropped events. Reconnection is explicit and commands are not replayed automatically.</p>
+<p>Both queues are bounded to 128 entries; control bodies are limited to 64 KiB. Full outbound queues error. Dropped inbound events increment a counter; stateful clients must resynchronize. Network work stays on a Rust worker, while VM callbacks stay on the host thread. Do not connect or close inside a rendering frame.</p>
+<p>Lua hosts select exactly one mlua backend: Luau by default, LuaJIT for compatible VR hosts, or Lua 5.4. Untrusted scripts should receive a host-selected session through <code>attach</code>, rather than permission to choose credentials or connect freely. Router grants remain authoritative.</p>
+<h2 id="first-integration-runbook">First integration runbook</h2>
+<ol>
+<li>Choose one narrow, versioned domain message contract and an explicitly addressed test recipient.</li>
+<li>Check and test only the required crates. Linux MIDI/audio builds need ALSA development libraries; portable ADB builds do not.</li>
+<li>Configure a local router, trusted registration credentials and minimum sender/receiver grants.</li>
+<li>Start the recipient before the source; confirm registration and route selection.</li>
+<li>Send one deterministic event. Verify the reply and the recipient's actual state separately.</li>
+<li>Test expiry, denied publishing, disconnect and receiver restart. Stateful sources must send a fresh snapshot after gaps.</li>
+<li>Add encrypted remote routing or direct sessions only after the local contract works.</li>
+</ol>
+<pre><code class="language-sh">cargo check --locked -p unibus-adb
+cargo test --locked -p unibus-adb
+
+# Embedded host contracts:
+cargo check -p unibus-sdk -p unibus-lua -p unibus-ffi
+cargo test -p unibus-sdk -p unibus-lua -p unibus-ffi
+</code></pre>
+<p>For an already configured local MCP edge, <code>unibus-mcp setup-clients</code> previews client configuration; <code>--write</code> applies it. This configures the client endpoint, not provider credentials or grants.</p>
+<h2 id="source-references">Source references</h2>
+<ul>
+<li><code>README.md</code>: workspace, adapters, routing and grants.</li>
+<li><code>crates/unibus/src/envelope.rs</code> and <code>framing.rs</code>: actual wire bounds and codec.</li>
+<li><code>docs/sdk.md</code>: embedded API, ownership and overflow behavior.</li>
+<li><code>docs/direct-sessions-and-discovery.md</code>: signed direct sessions and provider boundaries.</li>
+<li><code>docs/midi-bridge-runbook.md</code>, <code>docs/mqtt-bridge-runbook.md</code>, <code>docs/adb-portable-quickstart.md</code>: operational recipes.</li>
+</ul>
+<p>See the <a href="https://fungos.dev/projects/dcp.html">DCP integration guide</a> for bounded decisions and the <a href="https://fungos.dev/docs/ecosystem.html">fungOS component map</a> for ownership across the environment.</p>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7"><code>781f27f</code></a> · 2026-10-08 · Use website URLs for cross-guide navigation in Markdown exports</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7/docs-source/projects/unibus.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/FuturePresentLabs/unibus/commit/98e842156554def8089882d2e1e9917e49253cb8"><code>98e8421</code></a>. Watched code changed since review; revalidation needed.</p><details><summary>Watched source paths</summary><ul><li><code>crates/unibus</code></li><li><code>crates/unibus-router</code></li><li><code>crates/unibus-sdk</code></li><li><code>docs/sdk.md</code></li><li><code>docs/direct-sessions-and-discovery.md</code></li></ul></details><pre>crates/unibus: uncommitted changes
+crates/unibus-router: uncommitted changes
+crates/unibus-sdk: uncommitted changes</pre></footer></main></body></html>

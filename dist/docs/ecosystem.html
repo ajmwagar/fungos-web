@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#283d31"><title>Component ownership — fungOS</title><link rel="stylesheet" href="../distro.css"><link rel="icon" type="image/svg+xml" href="../assets/fungos.svg"></head>
-<body class="manual-page"><header><nav class="wrap" aria-label="Documentation navigation"><details class="project-switcher">
+<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Component ownership and interfaces</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/fungos.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
 <summary class="brand project-trigger" aria-label="fungOS — switch project"><img src="../theme/fungos.svg" width="30" height="30" alt="">fungOS<span class="project-chevron" aria-hidden="true">⌄</span></summary>
 <nav class="project-menu" aria-label="Choose an FPL project">
 <a class="project-option project-fungos" href="../index.html" aria-current="page"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS ✓</span></a>
@@ -10,64 +9,43 @@
 <a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
 <a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
 </nav><script defer src="../theme/switcher.js"></script>
-</details><a href="../index.html#docs">All documentation</a><a href="../index.html#downloads">Release status</a></nav></header>
-<main class="wrap manual"><p class="eyebrow">Technical preview · documentation snapshot</p><h1>Component ownership</h1><p>This is a read-only snapshot of <code>fungOS/ecosystem.md</code> at Mycelium source revision <code>4981e919ca6eef43f013ae94b62584d371584251</code>. Markdown is shown verbatim; relative source references are text, not website links. It documents preview capabilities and current limits, not a supported public release.</p><pre class="manual-source"># FPL ecosystem map
-
-This is a map of responsibilities, not a mandate that every deployment run every
-project.
-
-| Layer | Owner | Responsibility | Explicitly does not own |
-|---|---|---|---|
-| Machine and network operations | Mycelium | Identity, access, topology, discovery, resource observations, signed distribution, fleet health | Application message routing or inference |
-| Bootstrapping | Genesis | Network boot, image assembly, disk provisioning, Tang/Clevis enrollment, first Mycelium identity | Ongoing fleet management |
-| Transport | Unibus | Authorized message and event transport between independently useful endpoints | Fleet inventory or service lifecycle |
-| Composition | Canvas | Human and agent-facing composition of applications, media, and tools | Transport and machine provisioning |
-| Inference | Bifrost | Inference interfaces and routing | General service supervision |
-| Compute execution | Yggdrasil and UMIE | Heterogeneous accelerator discovery and execution | Host identity or topology authority |
-| Workload substrate | Shroud | Workload packaging and execution drivers | Bare-metal ownership |
-| Storage substrate | IPFS and compatible providers | Content-addressed distribution and pull-through caching | Identity policy |
-| Product-specific engines | For example, PedalKernel | Domain implementation and product behavior | Shared infrastructure contracts |
-
-## Shared contracts
-
-Shared contracts should be small, versioned, provider-neutral, and owned once.
-Likely contracts include:
-
-- Peer identity and signed claims.
-- Resource observations for compute, storage, capture, and attached hardware.
-- Service advertisements with freshness and provenance.
-- Artifact manifests, digests, signatures, and deployment policy.
-- Topology observations and reachability measurements.
-- Security findings and remediation evidence.
-
-A shared contract is not permission to share internal databases or Rust types
-between projects. Each consumer should accept the contract through a narrow
-adapter, and static/local providers should be usable in tests to prove that no
-consumer depends on Mycelium.
-
-## Deployment profiles
-
-The same contracts should support several deliberately different profiles:
-
-- **Embedded:** ESP32-class devices participate through constrained Unibus and
-  identity interfaces without pretending to be full Linux hosts.
-- **Edge:** Raspberry Pi and small Linux nodes provide local discovery, routing,
-  caching, and boot services.
-- **Workstation:** macOS, Linux, and Windows machines expose resources while
-  retaining native user and security models.
-- **Compute:** GPU nodes run UMIE/Yggdrasil and receive signed artifacts according
-  to policy.
-- **Site:** one or more replaceable nodes provide resilient local services and
-  connect sites without requiring a permanent central controller.
-
-## What “OS” means here
-
-fungOS should initially mean an interoperable operating environment, not a Linux
-distribution. The substrate must work with existing Debian, Raspberry Pi OS,
-macOS, Windows, and embedded deployments before an opinionated image earns its
-place.
-
-A later FPL Linux image can package the same components and contracts. It should
-be a replaceable distribution profile built by Genesis, not the definition of
-the ecosystem.
-</pre></main></body></html>
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="ecosystem.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="ecosystem.md">Copy for LLM</button><a href="ecosystem.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="component-ownership-and-interfaces">Component ownership and interfaces</h1>
+<p>fungOS is a Debian-based operating environment that composes independently useful tools. Not every node runs every application. Shared contracts should be small, versioned and owned once; a discovery observation or shared schema is not permission to read another application's internal state.</p>
+<h2 id="ownership-map">Ownership map</h2>
+<table><thead><tr><th>Component</th><th>Owns</th><th>Does not own</th></tr></thead><tbody>
+<tr><td>fungOS</td><td>Runtime profiles, generic rootfs assembly and provisioning seams</td><td>Every application's implementation or license</td></tr>
+<tr><td>Mycelium</td><td>Machine identity, discovery, topology, access and signed distribution</td><td>Application transport or inference kernels</td></tr>
+<tr><td>Genesis</td><td>Bootstrap, disk/image provisioning and first identity delivery</td><td>Ongoing application message routing</td></tr>
+<tr><td><a href="https://fungos.dev/projects/unibus.html">Unibus</a></td><td>Authorized application envelopes, routing and transport</td><td>Domain effects or machine lifecycle</td></tr>
+<tr><td>Canvas</td><td>Human/agent composition, surfaces and application-owned controls</td><td>Host provisioning or generic transport</td></tr>
+<tr><td>Bifrost</td><td>Inference-facing interfaces and routing</td><td>Machine identity or generic service supervision</td></tr>
+<tr><td><a href="https://fungos.dev/projects/umie.html">UMIE</a></td><td>Modular inference execution and model recipes</td><td>Fleet authority or arbitrary model compatibility</td></tr>
+<tr><td>Yggdrasil</td><td>Compute placement/execution integration</td><td>Issuing host identity</td></tr>
+<tr><td>Shroud</td><td>Workload packaging and execution substrate</td><td>Bare-metal provisioning authority</td></tr>
+<tr><td>IPFS/storage providers</td><td>Content-addressed bytes and caching</td><td>Application permission policy</td></tr>
+<tr><td><a href="https://fungos.dev/projects/dcp.html">DCP</a></td><td>Bounded state-derived decision contract</td><td>Provider internals or execution authority</td></tr>
+<tr><td><a href="https://holodeck.fpl.dev/">Holodeck</a></td><td>XR room, interaction and bounded Lua room interfaces</td><td>CAD/CAM, audio or feed-owner internals</td></tr>
+</tbody></table>
+<p>This table describes interfaces and ownership, not a claim that each integration is installed, public or production-qualified.</p>
+<h2 id="select-a-deployment">Select a deployment</h2>
+<ul>
+<li><strong>Base node:</strong> generic Debian prerequisites, first-contact and update verification.</li>
+<li><strong>Headless edge:</strong> service and message runtime without a local desktop.</li>
+<li><strong>Display edge:</strong> Canvas runtime prerequisites, plus separately installed native applications.</li>
+<li><strong>Compute node:</strong> explicitly placed inference/accelerator services; resource observations inform eligibility, not trust.</li>
+<li><strong>Existing workstation:</strong> independently installed services retain the native OS and security model.</li>
+</ul>
+<p>Choose <a href="https://fungos.dev/docs/profiles.html">profiles</a> from actual requirements. A GPU does not automatically grant a compute role; a reachable router does not authorize a MIDI output; a model CID does not grant access to private content.</p>
+<h2 id="interfaces-worth-preserving">Interfaces worth preserving</h2>
+<ol>
+<li>First contact delivers a protected machine-specific claim through a provisioner-owned adapter.</li>
+<li>Update verification consumes artifact, manifest and signature paths without owning installation.</li>
+<li>Application transport consumes narrow domain contracts without interpreting their effects.</li>
+<li>DCP execution consumes exact catalog/state revisions and provider-defined arguments.</li>
+<li>Inference consumers use the engine's declared model recipes and interfaces rather than backend internals.</li>
+<li>XR programs consume the versioned room ABI, not credentials or private applet state.</li>
+</ol>
+<h2 id="operational-status">Operational status</h2>
+<p>The public fungOS builder and runtime interfaces are available. Generic outputs are rootfs tarballs; there is no public installer ISO in this slice. Persistent amd64 QEMU edge behavior and isolated visual rollback have documented qualification. Board boot integration and public package-origin deployment remain separate work.</p>
+<p>Public owner sources: fungOS <code>README.md</code>, <code>base/interfaces.md</code>, <code>docs/edge-dogfood.md</code>. The broader ownership map is reviewed against the original Mycelium <code>fungOS/ecosystem.md</code> snapshot and Unibus/DCP contracts; freshness tracking here watches the public fungOS source, not every independent project.</p>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7"><code>781f27f</code></a> · 2026-10-08 · Use website URLs for cross-guide navigation in Markdown exports</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7/docs-source/docs/ecosystem.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/ajmwagar/fungos/commit/6bb83c9bb3b650483e0dbcb9c6a14b37906671b9"><code>6bb83c9</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>README.md</code></li><li><code>base/interfaces.md</code></li></ul></details></footer></main></body></html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-project="dcp"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DCP — bounded decisions and provider integration</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/dcp.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
+<summary class="brand project-trigger" aria-label="DCP — switch project"><img src="../theme/dcp.svg" width="30" height="30" alt="">DCP<span class="project-chevron" aria-hidden="true">⌄</span></summary>
+<nav class="project-menu" aria-label="Choose an FPL project">
+<a class="project-option project-fungos" href="https://fungos.dev/"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS</span></a>
+<a class="project-option project-holodeck" href="https://holodeck.fpl.dev/"><img src="../theme/holodeck.svg" width="30" height="30" alt=""><span>Holodeck</span></a>
+<a class="project-option project-umie" href="https://fungos.dev/projects/umie.html"><img src="../theme/umie.svg" width="30" height="30" alt=""><span>UMIE<small class="project-kind">Modular inference engine</small></span></a>
+<div class="project-group">Protocols</div>
+<a class="project-option project-dcp" href="https://dcp.fpl.dev/" aria-current="page"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP ✓<small class="project-kind">Decision Catalog Protocol</small></span></a>
+<a class="project-option project-unibus" href="https://fungos.dev/projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
+</nav><script defer src="../theme/switcher.js"></script>
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="dcp.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="dcp.md">Copy for LLM</button><a href="dcp.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="decision-catalog-protocol">Decision Catalog Protocol</h1>
+<p>DCP publishes the finite decisions a system can legally make against its current state. A client selects an advertised action and schema-valid arguments; the provider validates authority and current revisions before applying an effect.</p>
+<p><strong>Version 0.1 is a draft.</strong> This ecosystem guide is explanatory, not normative. The <a href="https://dcp.fpl.dev/">DCP reference site</a> and <a href="https://github.com/FuturePresentLabs/dcp/blob/main/spec/v0.1/README.md">normative specification</a> own the protocol. Reviewed source: <code>spec/v0.1/README.md</code> and the JSON Schema 2020-12 contracts at the revision above.</p>
+<h2 id="why-catalogs-are-state-derived">Why catalogs are state-derived</h2>
+<p>A machine's legal actions change as its state changes. A stock editor can offer only material and dimensions that fit the current blank; a room can offer only module placements legal in its current floorplan. The provider computes these choices. The decision system does not invent internal function names, shell commands or object handles.</p>
+<p>The flat <code>actions</code> collection is authoritative. A decision tree may present those same action IDs, but it does not create additional authority.</p>
+<h2 id="core-http-surface">Core HTTP surface</h2>
+<table><thead><tr><th>Endpoint / header</th><th>Purpose</th></tr></thead><tbody>
+<tr><td><code>GET /.well-known/dcp</code></td><td>Provider identity, exact supported versions, authorization metadata and endpoint discovery</td></tr>
+<tr><td><code>GET /v1/decisions</code></td><td>Recommended catalog endpoint; state-derived actions and revision tokens</td></tr>
+<tr><td><code>POST /v1/decisions/execute</code></td><td>Recommended execution endpoint; an exact bounded selection and its expected revisions</td></tr>
+<tr><td><code>DCP-Version: 0.1</code></td><td>Exact version negotiation; provider echoes the selected value</td></tr>
+</tbody></table>
+<p>Discovery may advertise relative endpoints, an execution endpoint and a stream endpoint. Do not hardcode an undiscovered provider URL or infer compatibility between different version strings. An unsupported requested version returns <code>unsupported_version</code> with HTTP 406.</p>
+<p>Provider-local <code>/v1/decisions/plan</code> is an optional extension outside the core 0.1 contract. A plan is a proposal until it becomes a bounded selection and passes provider validation.</p>
+<h2 id="catalog-and-action-reference">Catalog and action reference</h2>
+<p>Catalogs carry <code>catalog_revision</code> and <code>state_revision</code>. They are opaque equality tokens, not sortable version numbers. A known freshness bound may be exposed through <code>expires_at</code>.</p>
+<p>Each action declares its input schema, availability, permitted lifecycle phases and all four safety properties:</p>
+<table><thead><tr><th>Property</th><th>Meaning</th></tr></thead><tbody>
+<tr><td><code>idempotent</code></td><td>Replay with the same request ID has no additional effect</td></tr>
+<tr><td><code>reversible</code></td><td>A bounded compensating or cancellation action exists</td></tr>
+<tr><td><code>requires_final</code></td><td>Commit needs final evidence</td></tr>
+<tr><td><code>confirmation_required</code></td><td>Commit needs explicit confirmation evidence</td></tr>
+</tbody></table>
+<p>Unavailable actions include a machine-readable reason. Availability is advisory: execution validates again. Phase membership determines prepare support; reversibility or idempotence alone does not.</p>
+<h2 id="lifecycle-and-execution">Lifecycle and execution</h2>
+<ol>
+<li><strong>Observe:</strong> obtain discovery, a fresh catalog and current evidence.</li>
+<li><strong>Speculate:</strong> select an advertised action and arguments matching its schema. Record exact evidence and catalog revisions.</li>
+<li><strong>Prepare, if supported:</strong> request reversible intermediate state under the provider's phase and finality policy.</li>
+<li><strong>Commit:</strong> supply the exact revisions, authorization, required finality and confirmation. The provider checks these immediately before the effect.</li>
+<li><strong>Cancel:</strong> explicitly cancel obsolete preparations, referencing their receipt. Cancellation is idempotent.</li>
+</ol>
+<p>Execution requests include <code>dcp_version</code>, <code>request_id</code>, <code>decision_id</code>, <code>action_id</code>, <code>arguments</code>, <code>phase</code>, both expected revision tokens, evidence identity/revision/status and <code>confirmed</code>. Prepared operations also refer to their preparation receipt when required. Use the canonical execute schema rather than constructing a permissive replacement.</p>
+<p>On <code>stale_catalog</code> or <code>stale_state</code>, refresh and make a new decision. Do not substitute the new revision into an old decision. A reused request ID with different content is a conflict. Providers return receipts for rejected, no-op and accepted outcomes; preserve the receipt as the operation result.</p>
+<h2 id="streaming">Streaming</h2>
+<p>DCP defines transport-neutral append-only stream messages. Session sequence numbers and evidence revisions advance exactly one step. Evidence carries its complete current value, not a delta. Final and retracted evidence are terminal.</p>
+<p>The optional WebSocket binding uses <code>wss</code> and subprotocol <code>dcp.v0.1</code>, with one JSON message per text frame. Binary frames are undefined. Reconnection starts a new session; replay is not implied. Consumers must fail closed on gaps, duplicates, invalid parents or unknown revisions.</p>
+<p>A reconciled decision history records confirmation, replacement, cancellation or compensation. History itself grants no execution authority.</p>
+<h2 id="provider-integration-runbook">Provider integration runbook</h2>
+<ol>
+<li>Derive actions from actual provider state and expose their input schemas.</li>
+<li>Implement exact version negotiation and credential-free discovery.</li>
+<li>Authenticate execution independently from catalog visibility.</li>
+<li>Check both opaque revision tokens at the effect boundary.</li>
+<li>Declare only supported phases and safety properties your implementation actually satisfies.</li>
+<li>Test stale state, stale catalog, denied authority, duplicate request IDs and incompatible replays.</li>
+<li>Validate discovery, catalog, execute and receipt fixtures with the owner's conformance suite.</li>
+<li>Add streaming or parameter rounds only if your provider implements those optional contracts.</li>
+</ol>
+<p>In the owner checkout, the existing verification command is:</p>
+<pre><code class="language-sh">npm run test:conformance
+</code></pre>
+<p>The required Node version and setup are documented by the owning repository. This guide does not assert that a provider passes conformance because it exposes similarly named endpoints.</p>
+<h2 id="dcp-mcp-and-unibus">DCP, MCP and Unibus</h2>
+<p>MCP advertises general tools; DCP advertises current bounded decisions. An application may expose both from a provider-owned registry. <a href="https://fungos.dev/projects/unibus.html">Unibus</a> can lease and route either contract without translating one into the other. Credentials remain local to the edge; catalogs and capability projections do not contain bearer values.</p>
+<h2 id="source-and-status">Source and status</h2>
+<p>The reviewed spec includes exact version negotiation, catalog/execute/receipt schemas, transport-neutral streaming, a WebSocket binding and an optional parameter-rounds profile. DCP remains a draft; downstream implementations must advertise what they support. This page does not claim every fungOS component is a conforming DCP provider.</p>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7"><code>781f27f</code></a> · 2026-10-08 · Use website URLs for cross-guide navigation in Markdown exports</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7/docs-source/projects/dcp.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/FuturePresentLabs/dcp/commit/398408c33d4a5ee3e0eecbe612e9e91cb0896fca"><code>398408c</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>spec/v0.1</code></li><li><code>public/schemas/v0.1</code></li><li><code>conformance/v0.1</code></li></ul></details></footer></main></body></html>

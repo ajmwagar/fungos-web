@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#283d31"><title>Build and inspection — fungOS</title><link rel="stylesheet" href="../distro.css"><link rel="icon" type="image/svg+xml" href="../assets/fungos.svg"></head>
-<body class="manual-page"><header><nav class="wrap" aria-label="Documentation navigation"><details class="project-switcher">
+<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Build and inspect fungOS</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/fungos.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
 <summary class="brand project-trigger" aria-label="fungOS — switch project"><img src="../theme/fungos.svg" width="30" height="30" alt="">fungOS<span class="project-chevron" aria-hidden="true">⌄</span></summary>
 <nav class="project-menu" aria-label="Choose an FPL project">
 <a class="project-option project-fungos" href="../index.html" aria-current="page"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS ✓</span></a>
@@ -10,62 +9,42 @@
 <a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
 <a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
 </nav><script defer src="../theme/switcher.js"></script>
-</details><a href="../index.html#docs">All documentation</a><a href="../index.html#downloads">Release status</a></nav></header>
-<main class="wrap manual"><p class="eyebrow">Technical preview · documentation snapshot</p><h1>Build and inspection</h1><p>This is a read-only snapshot of <code>fungOS/base/RUNBOOK.md</code> at Mycelium source revision <code>4981e919ca6eef43f013ae94b62584d371584251</code>. Markdown is shown verbatim; relative source references are text, not website links. It documents preview capabilities and current limits, not a supported public release.</p><pre class="manual-source"># Manual build and inspection runbook
-
-## Prerequisites
-
-Use a Debian-compatible host with `mmdebstrap`, `debian-archive-keyring`,
-`tar`, `sha256sum`, and `shellcheck`.
-Building `arm64` on another architecture also needs `qemu-user-static` and
-`binfmt-support`. The build requires root (or a working rootless mmdebstrap
-mode), outbound HTTPS, and enough free space for one root filesystem.
-
-## Build
-
-1. Change to `fungOS/base`.
-2. Run `./scripts/check.sh` to validate declarations and shell code.
-3. Run `sudo ./scripts/build.sh amd64` or `sudo ./scripts/build.sh arm64`.
-4. Find the rootfs tarball, manifest, package list, and SHA-256 checksum in
-   `out/`.
-5. Run `sudo ./scripts/inspect.sh out/fungos-base-ARCH.tar`.
-
-The build refuses unsupported architectures and unknown or duplicate
-capabilities. Override `OUT_DIR` or `WORK_DIR` for CI scratch storage. Do not
-override the snapshot for a release without reviewing and committing the new
-lock values.
-
-## Reproducibility check
-
-Build twice from clean work directories with the same committed inputs, then:
-
-```sh
-sha256sum out-a/fungos-base-amd64.tar out-b/fungos-base-amd64.tar
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="base.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="base.md">Copy for LLM</button><a href="base.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="build-and-inspect-fungos">Build and inspect fungOS</h1>
+<p>The public fungOS source builds capability-derived Debian root filesystems for <code>amd64</code> and <code>arm64</code>. The output is a <strong>rootfs tarball</strong>, not a bootable disk, SD-card image or installer ISO. Kernel, firmware, disk assembly, enrollment and signed first-party applications remain separate steps.</p>
+<p>This guide follows the public <a href="https://github.com/ajmwagar/fungos">fungOS source</a> at the reviewed revision above. First-party code and documentation are MIT OR Apache-2.0; packaged Linux, Debian and optional applications retain their own licenses.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Use a Debian-compatible build host with <code>mmdebstrap</code>, <code>debian-archive-keyring</code>, <code>tar</code>, <code>sha256sum</code> and <code>shellcheck</code>. Cross-building arm64 additionally needs <code>qemu-user-static</code> and <code>binfmt-support</code>. The build needs root or a working rootless mmdebstrap mode, outbound HTTPS and enough free space for one root filesystem.</p>
+<p>Use committed <code>base/config/release.env</code> inputs. Changing the locked snapshot changes the artifact; review that change before calling it a release.</p>
+<h2 id="build-runbook">Build runbook</h2>
+<p>From the repository root:</p>
+<pre><code class="language-sh">./base/scripts/check.sh
+sudo ./base/scripts/build.sh amd64 base
+sudo ./base/scripts/inspect.sh base/out/fungos-base-amd64.tar
+</code></pre>
+<ol>
+<li>Run the inexpensive declaration and shell checks first.</li>
+<li>Select a supported architecture and <a href="https://fungos.dev/docs/profiles.html">profile</a>.</li>
+<li>Build on a suitable Linux host.</li>
+<li>Retain the tarball, manifest, resolved package list and SHA-256 file from <code>base/out/</code>.</li>
+<li>Inspect the artifact before disk assembly or provisioning.</li>
+</ol>
+<p>The builder refuses unsupported architectures and unknown or duplicate capabilities. <code>OUT_DIR</code> and <code>WORK_DIR</code> allow independent CI scratch directories. Do not share a work directory between concurrent builds.</p>
+<h2 id="verify-reproducibility">Verify reproducibility</h2>
+<p>Build twice from clean work directories with the same committed inputs, then compare both artifact digests and package lists:</p>
+<pre><code class="language-sh">sha256sum out-a/fungos-base-amd64.tar out-b/fungos-base-amd64.tar
 diff -u out-a/fungos-base-amd64.packages out-b/fungos-base-amd64.packages
-```
-
-The digests should match. A mismatch means the snapshot changed unexpectedly,
-the archive normalization regressed, or a build input was not declared.
-
-## First boot
-
-1. Add a machine-specific `/etc/fungos/first-contact.env` through provisioning.
-   Never put credentials in the image.
-2. Install exactly one executable adapter in
-   `/usr/lib/fungos/first-contact.d/`. It receives the environment file path as
-   its sole argument.
-3. Add authorized SSH keys through provisioning. Root password login is
-   disabled in the image.
-4. Reboot or start `fungos-first-contact.service`; inspect it with
-   `journalctl -u fungos-first-contact`.
-5. Install an update verifier adapter under
-   `/usr/lib/fungos/update-verifiers.d/`; invoke `fungos-verify-update` before
-   applying any artifact.
-
-## Recovery
-
-If enrollment fails, inspect the journal, networkd state, the non-secret
-environment file, and adapter permissions. The runner fails loudly when zero
-or multiple adapters exist. Remove stale adapters rather than selecting one by
-filesystem order.
-</pre></main></body></html>
+</code></pre>
+<p>Matching inputs should produce matching digests. A mismatch is evidence to investigate snapshot drift, undeclared inputs or archive normalization. This page documents the verification procedure; it does not claim a new build was performed when the page was generated.</p>
+<h2 id="provisioning-interfaces">Provisioning interfaces</h2>
+<table><thead><tr><th>Interface</th><th>Contract</th></tr></thead><tbody>
+<tr><td><code>/usr/lib/fungos/first-contact.d/</code></td><td>Exactly one executable adapter; receives the first-contact environment file path</td></tr>
+<tr><td><code>/etc/fungos/first-contact.env</code></td><td>Provisioner-owned <code>KEY=VALUE</code> records; adapter validates them</td></tr>
+<tr><td><code>/usr/lib/fungos/update-verifiers.d/</code></td><td>Exactly one executable verifier; receives artifact, manifest and signature paths</td></tr>
+<tr><td><code>fungos-verify-update</code></td><td>Exit zero authorizes staging; it does not install the artifact</td></tr>
+</tbody></table>
+<p>The generic image does not embed tokens, endpoints, enrollment certificates or a Mycelium executable. First-contact adapters own transport, retries and durable enrollment state. Update verifiers own trusted keys, signature format, expiry and rollback protection.</p>
+<p>An absent or ambiguous adapter fails visibly. Never let filesystem ordering select a security policy.</p>
+<h2 id="recovery">Recovery</h2>
+<p>Inspect <code>journalctl -u fungos-first-contact</code>, networkd state, adapter ownership and executable permissions. Remove stale adapters rather than weakening the single-adapter rule. Provision a public-key SSH recovery path; root password login is disabled in the generic image.</p>
+<p>See <a href="https://fungos.dev/docs/install.html">installation</a> for assembling a bootable target and <a href="https://fungos.dev/docs/updates.html">signed updates</a> for activation and recovery. Owner references: <code>base/README.md</code>, <code>base/RUNBOOK.md</code>, <code>base/interfaces.md</code> and <code>base/scripts/</code>.</p>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7"><code>781f27f</code></a> · 2026-10-08 · Use website URLs for cross-guide navigation in Markdown exports</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7/docs-source/docs/base.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/ajmwagar/fungos/commit/6bb83c9bb3b650483e0dbcb9c6a14b37906671b9"><code>6bb83c9</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>base</code></li></ul></details></footer></main></body></html>

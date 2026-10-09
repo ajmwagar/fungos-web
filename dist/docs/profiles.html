@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#283d31"><title>Profiles and security boundaries — fungOS</title><link rel="stylesheet" href="../distro.css"><link rel="icon" type="image/svg+xml" href="../assets/fungos.svg"></head>
-<body class="manual-page"><header><nav class="wrap" aria-label="Documentation navigation"><details class="project-switcher">
+<html lang="en" data-project="fungos"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Profiles and deployment boundaries</title><link rel="stylesheet" href="../theme/theme.css"><link rel="icon" href="../theme/fungos.svg"><script defer src="../theme/docs.js"></script></head><body class="manual-page"><a class="skip" href="#content">Skip to content</a><header class="masthead"><div class="wrap"><details class="project-switcher">
 <summary class="brand project-trigger" aria-label="fungOS — switch project"><img src="../theme/fungos.svg" width="30" height="30" alt="">fungOS<span class="project-chevron" aria-hidden="true">⌄</span></summary>
 <nav class="project-menu" aria-label="Choose an FPL project">
 <a class="project-option project-fungos" href="../index.html" aria-current="page"><img src="../theme/fungos.svg" width="30" height="30" alt=""><span>fungOS ✓</span></a>
@@ -10,95 +9,34 @@
 <a class="project-option project-dcp" href="https://dcp.fpl.dev/"><img src="../theme/dcp.svg" width="30" height="30" alt=""><span>DCP<small class="project-kind">Decision Catalog Protocol</small></span></a>
 <a class="project-option project-unibus" href="../projects/unibus.html"><img src="../theme/unibus.svg" width="30" height="30" alt=""><span>Unibus<small class="project-kind">Granted message transport</small></span></a>
 </nav><script defer src="../theme/switcher.js"></script>
-</details><a href="../index.html#docs">All documentation</a><a href="../index.html#downloads">Release status</a></nav></header>
-<main class="wrap manual"><p class="eyebrow">Technical preview · documentation snapshot</p><h1>Profiles and security boundaries</h1><p>This is a read-only snapshot of <code>fungOS/profiles.md</code> at Mycelium source revision <code>4981e919ca6eef43f013ae94b62584d371584251</code>. Markdown is shown verbatim; relative source references are text, not website links. It documents preview capabilities and current limits, not a supported public release.</p><pre class="manual-source"># fungOS profiles
-
-Profiles are desired capability sets, not independently maintained operating
-systems. Every profile extends the same minimal base and uses Mycelium's signed,
-content-addressed package policy for optional first-party applications.
-Service lifecycle remains owned by an explicit native adapter, not Mycelium.
-
-## Base
-
-`fungOS-base` contains only the operating substrate required to remain
-reachable and supportable:
-
-- hardware discovery and networking;
-- OpenSSH and trust roots;
-- Mycelium identity, access, health, and signed self-update;
-- the provider-neutral first-contact and update-verification interfaces.
-
-No media, inference, workload, or product application belongs in the base.
-
-Development and capable edge hosts can opt into [Shroud OCI conversion
-tooling](tooling/README.md) independently of workload execution. Its native
-dependency overlay and signed executable policy do not change default images.
-
-## Edge
-
-`fungOS-edge` extends base for interactive on-premises systems. Its initial
-package policy selects:
-
-- Unibus for authorized application messaging and discovery integration;
-- Canvas where a compositor or user-facing surface is requested.
-
-Neither application is unconditional. Headless Unibus nodes and Canvas nodes
-are separate derived classes, even when a machine satisfies both.
-
-The build accepts `edge` and `headless-edge` for both `amd64` and `arm64`:
-
-```sh
-fungOS/base/scripts/build.sh amd64 edge
-fungOS/base/scripts/build.sh arm64 edge
-fungOS/base/scripts/build.sh amd64 headless-edge
-fungOS/base/scripts/build.sh arm64 headless-edge
-```
-
-`edge` adds the native runtime dependencies for `canvas-linux` (the Wayland/KMS
-compositor) and `canvas` (its Wayland client), plus Unibus. `headless-edge`
-selects Unibus without a graphical session, Canvas, Xorg or Weston. Both inherit
-the base declaration rather than duplicate its package list. First-party
-executables still come from authorized signed package releases, not Debian apt
-or embedded credentials; these commands produce runtime rootfs tarballs, not
-fully provisioned bootable images.
-
-Architecture is separate from board support: `arm64` is the Pi 64-bit userspace
-target, including Pi 3B+, but boot firmware, a matching board kernel and its
-modules must be supplied by Genesis's board-specific boot path. An arm64
-tarball alone is not a verified Pi SD-card image. The existing QEMU display
-module/unit is amd64-test-specific and must not be installed on a Pi.
-
-## Compute
-
-`fungOS-compute` extends base for accelerator-capable workers. Its package
-policy may select:
-
-- UMIE when a supported GPU or Metal accelerator is observed;
-- Yggdrasil for inference placement and execution;
-- Shroud only for nodes explicitly assigned the workload-substrate role.
-
-GPU presence can derive accelerator eligibility, but it cannot derive trust or
-the Shroud role. Discovery proves availability; signed policy grants placement.
-
-## Cloud
-
-`fungOS-cloud` extends base with native workload runtime dependencies for Shroud
-and an optional separate Fab build controller. It does not inherit edge display
-or messaging packages and does not require a GPU. See the [cloud substrate
-boundary](cloud/README.md) for signed applications, KVM preflight and migration.
-
-```sh
-fungOS/base/scripts/build.sh amd64 cloud
-```
-
-This currently assembles a runtime rootfs, not a bootable DigitalOcean image.
-Beachhead and Bob remain owned by shared-infra's existing IaC resources; a
-cloud profile is not permission to destroy or reimage them.
-
-## Delivery boundary
-
-Fab or another build provider produces immutable artifacts. Mycelium verifies,
-gossips, selects, stages, and atomically advances signed versions. Native
-systemd or launchd adapters restart and health-check services. Profile changes
-therefore reuse one update path and do not introduce per-profile installers.
-</pre></main></body></html>
+</details><nav aria-label="Documentation navigation"><a href="../index.html">Home</a><a href="profiles.md">Source Markdown</a></nav></div></header><main class="manual wrap" id="content"><div class="docs-actions"><button type="button" class="button" data-copy-markdown="profiles.md">Copy for LLM</button><a href="profiles.md" download>Download Markdown</a><span role="status" aria-live="polite" data-copy-status></span></div><article><h1 id="profiles-and-deployment-boundaries">Profiles and deployment boundaries</h1>
+<p>Profiles derive Debian package sets from named capability declarations. They describe runtime prerequisites, not an application bundle, a placement grant or a complete bootable image.</p>
+<h2 id="profile-matrix">Profile matrix</h2>
+<table><thead><tr><th>Profile</th><th>Declared capabilities</th><th>Intended use</th><th>Does not include</th></tr></thead><tbody>
+<tr><td><code>base</code></td><td>Core, networkd, SSH, first contact, signed-update verification</td><td>Small provisionable node</td><td>Application executables, identity or board firmware</td></tr>
+<tr><td><code>edge</code></td><td>Base plus edge runtime and Canvas display dependencies</td><td>Native visual edge</td><td>Automatically authorized devices or a preconfigured production seat</td></tr>
+<tr><td><code>headless-edge</code></td><td>Base plus edge runtime</td><td>Messaging/services without a local desktop</td><td>Canvas display runtime</td></tr>
+<tr><td><code>cloud</code></td><td>Base plus cloud runtime</td><td>Workload substrate prerequisites</td><td>Edge display packages or a required GPU</td></tr>
+</tbody></table>
+<p>Both <code>amd64</code> and <code>arm64</code> are declared targets. Architecture support for a rootfs does not prove that a particular board boots or that an application supports its accelerator.</p>
+<h2 id="selecting-and-inspecting">Selecting and inspecting</h2>
+<pre><code class="language-sh">./base/scripts/check.sh
+sudo ./base/scripts/build.sh amd64 edge
+sudo ./base/scripts/inspect.sh base/out/fungos-edge-amd64.tar
+</code></pre>
+<p>Inspect the resolved package list and manifest before provisioning. The current source-of-truth files are <code>base/profiles/*.capabilities</code> and <code>base/capabilities/*.packages</code>. A derived website table is a reviewed explanation of those files, not a second installer.</p>
+<h2 id="runtime-dependencies-versus-applications">Runtime dependencies versus applications</h2>
+<p>Canvas, Unibus, Mycelium and UMIE remain independent owners. A profile can supply their runtime libraries; their signed executables, trust configuration, data and service policy arrive separately. GPU observation may inform eligibility but cannot grant a workload role or permission to execute.</p>
+<p>Keep one activation owner per executable. APT and native package activation must not race to manage the same application. Choose the owner explicitly and retain its recovery path.</p>
+<h2 id="security-boundaries">Security boundaries</h2>
+<ul>
+<li>First-contact and update-verifier adapters use an exact single-adapter contract.</li>
+<li>Enrollment claims are private, short-lived and machine-specific; generic images must not carry them.</li>
+<li>Discovery establishes facts about available resources, not authority to place workloads or control peripherals.</li>
+<li>A role or signed placement policy is separate from the machine's hardware capabilities.</li>
+<li>Generated distributions contain separately licensed software; the complete image is not uniformly MIT/Apache.</li>
+</ul>
+<h2 id="current-qualification">Current qualification</h2>
+<p>The public owner documents persistent amd64 QEMU edge operation and isolated visual rollback. The generic builder itself is not an installer. Pi, cloud disk assembly, encrypted-root unlock, whole-set atomic updates and accelerator-specific model qualification have independent evidence requirements.</p>
+<p>Follow <a href="https://fungos.dev/docs/install.html">installation</a>, <a href="https://fungos.dev/docs/pi.html">Pi status</a> or <a href="https://fungos.dev/docs/updates.html">update qualification</a>. Reviewed sources: public fungOS <code>README.md</code>, <code>base/profiles/</code>, <code>base/capabilities/</code>, <code>THIRD-PARTY.md</code>.</p>
+</article><footer class="docs-provenance"><h2>Documentation provenance</h2><p>Last documentation change: <a href="https://github.com/ajmwagar/fungos-web/commit/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7"><code>781f27f</code></a> · 2026-10-08 · Use website URLs for cross-guide navigation in Markdown exports</p><p><a href="https://github.com/ajmwagar/fungos-web/blob/781f27f1525dbc4ffdaf0cb755cf3eace0fcf6c7/docs-source/docs/profiles.md">Canonical source at this revision</a>. Markdown export preserves the canonical source exactly.</p><p>Reviewed against <a href="https://github.com/ajmwagar/fungos/commit/6bb83c9bb3b650483e0dbcb9c6a14b37906671b9"><code>6bb83c9</code></a>. No changes to watched paths since review.</p><details><summary>Watched source paths</summary><ul><li><code>base/profiles</code></li><li><code>base/capabilities</code></li><li><code>README.md</code></li></ul></details></footer></main></body></html>
