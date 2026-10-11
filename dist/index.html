@@ -117,14 +117,29 @@
 
       <section id="downloads">
         <h2>Downloads</h2>
-        <p><strong>No public image release yet.</strong> Current builds are listed below; these are not download links.</p>
+        <p><strong>Qualification image · amd64.</strong> A minimal Debian-based installer with Mycelium. Fresh BIOS and UEFI installation tested in QEMU. Not the full Canvas/Unibus edge image or a supported v0.1 release.</p>
+        <p>
+          <a class="button primary" href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-mycelium-qualification6-amd64.iso?v=qa6">ISO · 795 MiB</a>
+          <a class="button" href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-mycelium-qualification6-amd64.iso.torrent">Torrent</a>
+        </p>
+        <p><a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-mycelium-qa6-sources.tar.zst?v=qa6">Complete corresponding sources · 3.05 GiB</a> · <a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-mycelium-qa6-sources.tar.zst.torrent">Source torrent</a></p>
+        <p><a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/SHA256SUMS">Checksums</a> · <a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/SHA256SUMS.asc">Signature</a> · <a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/fungos-release-key.asc">Release public key</a> · <a href="https://downloads.fungos.dev/qualification/qa6-a77efddc84766530/NOTICE-PACKAGE-QUALIFICATION.md">Test and license evidence</a></p>
+        <details><summary>Verify your download</summary>
+          <p>Confirm this release-key fingerprint through a separately trusted channel before admitting the downloaded key:</p>
+          <p><code>FC3C04696D437DCD2F51895F0BEFDC5CF68C7CBA</code></p>
+          <pre><code>gpg --show-keys --with-fingerprint fungos-release-key.asc
+gpg --dearmor --output fungos-release-keyring.gpg fungos-release-key.asc
+gpgv --keyring ./fungos-release-keyring.gpg SHA256SUMS.asc SHA256SUMS
+sha256sum --check SHA256SUMS</code></pre>
+          <p>Download every listed file for a complete checksum check. On macOS, use <code>shasum -a 256 --check SHA256SUMS</code>. Torrent hashes alone do not authenticate a release. These torrents include HTTPS webseeds; no persistent public peer seeder is promised.</p>
+        </details>
         <p>Start with the <a href="docs/install.html">QEMU installation guide</a>, or add Mycelium to an existing machine without reinstalling it.</p>
         <ul class="builds">
           <li><strong>Pi 3B+ · arm64 · headless edge</strong><br>Owner-personalized image. Filesystem checks passed; hardware boot pending.</li>
           <li><strong>Base / edge · amd64 and arm64</strong><br>Rootfs tarballs built and inspected. Not standalone boot images.</li>
           <li><strong>Cloud · amd64</strong><br>Rootfs verified with nested Firecracker in QEMU. Not a provider image.</li>
         </ul>
-        <p class="secondary">Hardware validation, a security refresh and unpersonalized release images are still required before public downloads.</p>
+        <p class="secondary">Try the qualification installer in a disposable VM. Physical hardware, Pi and full edge images remain unreleased. This frozen build is not a security/compliance certification or a production-install recommendation.</p>
         <details><summary>Recorded build checksums</summary>
           <p>Pi 3B+ image:<br><code>7de69417da720730fd2dc094486ebaea1f4f5622dc10074854e7a85ebba1cb71</code></p>
           <p>Cloud rootfs:<br><code>2f5abd39627033adf3c1c98947f3f0892f8338ea424f5350d697d7cb601f9975</code></p>
